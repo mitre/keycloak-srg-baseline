@@ -1,0 +1,21 @@
+---
+- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | AUDIT | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
+  shell: 
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat3
+    - low
+    - xccdf_hdf_group_KEYC-01-000053
+    - audit
+
+- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | PATCH | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
+  shell: 
+  tags:
+    - cat3
+    - low
+    - xccdf_hdf_group_KEYC-01-000053
+    - patch
+

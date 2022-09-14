@@ -1,0 +1,5 @@
+- name: Set Up
+  import_tasks: prelim.yml
+
+- name: CAT II
+  import_tasks: cat2.yml

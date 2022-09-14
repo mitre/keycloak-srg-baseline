@@ -1,0 +1,10 @@
+---
+- hosts: goofy_galois
+#  connection: local
+#  become: yes #become sudo
+#  vars:
+#    is_container: false
+  roles:
+    - role: "./keycloak-hardening"
+#      rhel7stig_system_is_container: "{{ is_container | default(false) }}"
+#      rhel7stig_ssh_required: "{{ is_container == false  }}"

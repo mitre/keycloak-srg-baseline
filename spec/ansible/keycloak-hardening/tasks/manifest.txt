@@ -1,0 +1,53 @@
+
+high
+xccdf_hdf_group_KEYC-01-000022 - high - Keycloak must be configured to use secure protocols when connecting to directory services.
+xccdf_hdf_group_KEYC-01-000023 - high - Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments.
+xccdf_hdf_group_KEYC-01-000025 - high - Keycloak must be configured to uniquely identify and authenticate organizational users.
+xccdf_hdf_group_KEYC-01-000036 - high - Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module.
+xccdf_hdf_group_KEYC-01-000040 - high - Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication.
+xccdf_hdf_group_KEYC-01-000041 - high - Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication.
+
+medium
+xccdf_hdf_group_KEYC-01-000005 - medium - Keycloak must be configured to automatically audit account creation.
+xccdf_hdf_group_KEYC-01-000006 - medium - Keycloak must be configured to automatically audit account modification.
+xccdf_hdf_group_KEYC-01-000007 - medium - Keycloak must be configured to automatically audit account disabling actions.
+xccdf_hdf_group_KEYC-01-000008 - medium - Keycloak must be configured to automatically audit account removal actions.
+xccdf_hdf_group_KEYC-01-000009 - medium - Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period.
+xccdf_hdf_group_KEYC-01-000010 - medium - Keycloak must be configured to audit each authentication and authorization transaction.
+xccdf_hdf_group_KEYC-01-000011 - medium - Keycloak configuration audit records must identify what type of events occurred.
+xccdf_hdf_group_KEYC-01-000012 - medium - Keycloak configuration audit records must identify when (date and time) the events occurred.
+xccdf_hdf_group_KEYC-01-000013 - medium - Keycloak configuration audit records must identify where the events occurred.
+xccdf_hdf_group_KEYC-01-000014 - medium - Keycloak configuration audit records must identify the source of the events.
+xccdf_hdf_group_KEYC-01-000015 - medium - Keycloak configuration audit records must identify the outcome of the events.
+xccdf_hdf_group_KEYC-01-000016 - medium - Keycloak configuration audit records must identify any individual user or process associated with the event.
+xccdf_hdf_group_KEYC-01-000017 - medium - Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs.
+xccdf_hdf_group_KEYC-01-000018 - medium - Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner.
+xccdf_hdf_group_KEYC-01-000019 - medium - Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs.
+xccdf_hdf_group_KEYC-01-000021 - medium - Keycloak must be configured to disable non-essential modules.
+xccdf_hdf_group_KEYC-01-000024 - medium - Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments.
+xccdf_hdf_group_KEYC-01-000026 - medium - Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts.
+xccdf_hdf_group_KEYC-01-000027 - medium - Keycloak must be configured to require multifactor authentication using Common Access Card (CAC) Personal Identity Verification (PIV) credentials for authenticating non-privileged user accounts.
+xccdf_hdf_group_KEYC-01-000029 - medium - Keycloak must be configured to enforce a minimum 15-character password length.
+xccdf_hdf_group_KEYC-01-000030 - medium - Keycloak must be configured to prohibit password reuse for a minimum of five generations.
+xccdf_hdf_group_KEYC-01-000031 - medium - Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used.
+xccdf_hdf_group_KEYC-01-000032 - medium - Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used.
+xccdf_hdf_group_KEYC-01-000033 - medium - Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used.
+xccdf_hdf_group_KEYC-01-000034 - medium - Keycloak must be configured to enforce password complexity by requiring that at least one special character be used.
+xccdf_hdf_group_KEYC-01-000038 - medium - Keycloak must be configured to enforce 24 hours as the minimum password lifetime.
+xccdf_hdf_group_KEYC-01-000039 - medium - Keycloak must be configured to enforce a 60-day maximum password lifetime restriction.
+xccdf_hdf_group_KEYC-01-000043 - medium - Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication.
+xccdf_hdf_group_KEYC-01-000047 - medium - Keycloak must be configured to notify the system administrators and ISSO when accounts are created.
+xccdf_hdf_group_KEYC-01-000048 - medium - Keycloak must be configured to notify the system administrators and ISSO when accounts are modified.
+xccdf_hdf_group_KEYC-01-000049 - medium - Keycloak must be configured to notify the system administrators and ISSO for account disabling actions.
+xccdf_hdf_group_KEYC-01-000050 - medium - Keycloak must be configured to notify the system administrators and ISSO for account removal actions.
+xccdf_hdf_group_KEYC-01-000051 - medium - Keycloak must be configured to automatically audit account enabling actions.
+xccdf_hdf_group_KEYC-01-000052 - medium - Keycloak must be configured to notify system administrators and ISSO of account enabling actions.
+xccdf_hdf_group_KEYC-01-000054 - medium - Keycloak must be configured to maintain locks on user accounts until released by an administrator.
+xccdf_hdf_group_KEYC-01-000055 - medium - Keycloak must be configured to send audit records to a centralized audit server.
+xccdf_hdf_group_KEYC-01-000056 - medium - Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records.
+xccdf_hdf_group_KEYC-01-000057 - medium - Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records.
+xccdf_hdf_group_KEYC-01-000059 - medium - Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password.
+xccdf_hdf_group_KEYC-01-000064 - medium - AAA Services must not be configured with shared accounts.
+
+low
+xccdf_hdf_group_KEYC-01-000053 - low - Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization.

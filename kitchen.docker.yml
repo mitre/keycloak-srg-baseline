@@ -1,0 +1,57 @@
+---
+driver:
+  name: docker
+  env_variables:
+#  use_sudo: false
+#  privileged: true
+
+transport:
+  name: docker
+
+provisioner:
+  name: ansible_playbook
+  hosts: all
+  require_ansible_repo: true
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+  galaxy_ignore_certs: true
+  roles_path: spec/ansible/nginx-hardening
+  requirements_path: spec/ansible/nginx-hardening/requirements.yml
+  additional_copy_path:
+    - spec/ansible/nginx-hardening/vars
+  extra_vars_file: /tmp/kitchen/vars/docker.vars.yml
+
+verifier:
+  name: inspec
+  sudo: true
+  load_plugins: true
+  inspec_tests:
+    - path: .
+
+platforms:
+  - name: ubuntu-18.04
+    driver:
+      image: ubuntu:bionic-20220128
+      provision_command:
+        - apt-get update
+        - apt-get install -y systemd-sysv vim nginx w3m w3m-img
+        - update-rc.d ssh defaults
+        - service ssh start
+        - update-rc.d nginx defaults
+        - service nginx start
+
+suites:
+  - name: hardened
+    provisioner:
+      playbook: spec/ansible/nginx-hardening/hardening-playbook.yml
+    verifier:
+      reporter:
+        - cli
+        - json:spec/results/hardened-test-result.json
+  - name: vanilla
+    provisioner:
+      playbook: spec/ansible/nginx-hardening/vanilla-playbook.yml
+    verifier:
+      reporter:
+        - cli
+        - json:spec/results/vanilla-test-result.json
