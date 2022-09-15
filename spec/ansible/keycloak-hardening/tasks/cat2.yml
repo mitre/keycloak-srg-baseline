@@ -1,8 +1,18 @@
 ---
+- name: Create a list variable for enabledEventTypes
+  # Do I need to fetch existing enabledEventTypes first?
+  set_fact:
+    enabled_event_types: []
+
+- name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
+  set_fact:
+    enabled_event_types: "{{ enabled_event_types | union(['REGISTER']) | unique }}"
+
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | AUDIT | Keycloak must be configured to automatically audit account creation."
+  # Should this also include CLIENT_REGISTER?
   shell: >
-      /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
-      -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]' 
+      /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+      -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       -s 'enabledEventTypes={{enabled_event_types}}'
   register: result
   check_mode: no
@@ -22,23 +32,28 @@
 #    - xccdf_hdf_group_KEYC-01-000005
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | AUDIT | Keycloak must be configured to automatically audit account modification."
-#  # if the hardening commands are just going to be repeated, what do I need to do? should they be different? Seems
-#  # like changing the name to match multiple hardening controls makes sense.
-#  # CAUTION: remember the shell command below will not 'add', it will 'set'
-#  shell: >
-#    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
-#    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-#    -s 'enabledEventTypes=["UPDATE_PROFILE", "UPDATE_EMAIL", "UPDATE_PASSWORD"]'
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000006
-#    - audit
+- name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
+  set_fact:
+    enabled_event_types: "{{ enabled_event_types | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | 
+    unique }}"
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | AUDIT | Keycloak must be configured to automatically audit account modification."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]' 
+    -s 'enabledEventTypes={{enabled_event_types}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000006
+    - audit
+
+- name: see what we have
+  debug: var=enabled_event_types
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | PATCH | Keycloak must be configured to automatically audit account modification."
 #  shell: 
