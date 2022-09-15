@@ -2,18 +2,21 @@
 - name: Create a list variable for enabledEventTypes
   # Do I need to fetch existing enabledEventTypes first?
   set_fact:
-    enabled_event_types: []
+    enabled_event_types_list: []
 
 - name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
   set_fact:
-    enabled_event_types: "{{ enabled_event_types | union(['REGISTER']) | unique }}"
+    enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
+
+#- name: enabled_event_types list to string
+#  set_fact:
+#    enabledEventTypes: "{{ '[ ' + enabled_event_types_list | join(', ') + ' ]' }}"
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | AUDIT | Keycloak must be configured to automatically audit account creation."
   # Should this also include CLIENT_REGISTER?
   shell: >
       /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
       -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      -s 'enabledEventTypes={{enabled_event_types}}'
   register: result
   check_mode: no
   changed_when: no
@@ -34,14 +37,13 @@
 
 - name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
   set_fact:
-    enabled_event_types: "{{ enabled_event_types | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | 
+    enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | 
     unique }}"
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | AUDIT | Keycloak must be configured to automatically audit account modification."
   shell: >
     /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]' 
-    -s 'enabledEventTypes={{enabled_event_types}}'
   register: result
   check_mode: no
   changed_when: no
@@ -52,8 +54,8 @@
     - xccdf_hdf_group_KEYC-01-000006
     - audit
 
-- name: see what we have
-  debug: var=enabled_event_types
+#- name: see what we have
+#  debug: var=enabled_event_types
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | PATCH | Keycloak must be configured to automatically audit account modification."
 #  shell: 
@@ -63,17 +65,19 @@
 #    - xccdf_hdf_group_KEYC-01-000006
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | AUDIT | Keycloak must be configured to automatically audit account disabling actions."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000007
-#    - audit
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | AUDIT | Keycloak must be configured to automatically audit account disabling actions."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000007
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | PATCH | Keycloak must be configured to automatically audit account disabling actions."
 #  shell:
@@ -83,17 +87,24 @@
 #    - xccdf_hdf_group_KEYC-01-000007
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | AUDIT | Keycloak must be configured to automatically audit account removal actions."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000008
-#    - audit
+- name: xccdf_hdf_group_KEYC-01-000008 | Update enabled_event_types list
+  set_fact:
+    enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | 
+    unique }}"
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | AUDIT | Keycloak must be configured to automatically audit account removal actions."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000008
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | PATCH | Keycloak must be configured to automatically audit account removal actions."
 #  shell: 
@@ -126,17 +137,25 @@
 #    - xccdf_hdf_group_KEYC-01-000009
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | AUDIT | Keycloak must be configured to audit each authentication and authorization transaction."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000010
-#    - audit
+# TODO: need to determine appropriate event types
+#- name: xccdf_hdf_group_KEYC-01-000008 | Update enabled_event_types list
+#  set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) |
+#    unique }}"
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | AUDIT | Keycloak must be configured to audit each authentication and authorization transaction."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000010
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | PATCH | Keycloak must be configured to audit each authentication and authorization transaction."
 #  shell: 
@@ -146,17 +165,20 @@
 #    - xccdf_hdf_group_KEYC-01-000010
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | AUDIT | Keycloak configuration audit records must identify what type of events occurred."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000011
-#    - audit
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | AUDIT | Keycloak configuration audit records must identify what type of events occurred."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000011
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | PATCH | Keycloak configuration audit records must identify what type of events occurred."
 #  shell: 
@@ -166,17 +188,37 @@
 #    - xccdf_hdf_group_KEYC-01-000011
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012 | AUDIT | Keycloak configuration audit records must identify when (date and time) the events occurred."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000012
-#    - audit
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012_part1 | AUDIT | Keycloak configuration audit records must identify when (date and time) the events occurred."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000012
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012_part2 | AUDIT | Keycloak configuration audit records must identify when (date and time) the events occurred."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^log-console-format'
+    line: log-console-format='%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n'
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000012
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012 | PATCH | Keycloak configuration audit records must identify when (date and time) the events occurred."
 #  shell:
@@ -205,19 +247,21 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000013
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | AUDIT | Keycloak configuration audit records must identify the source of the events."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000014
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | AUDIT | Keycloak configuration audit records must identify the source of the events."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000014
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | PATCH | Keycloak configuration audit records must identify the source of the events."
 #  shell: 
 #  tags:
@@ -225,19 +269,22 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000014
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | AUDIT | Keycloak configuration audit records must identify the outcome of the events."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000015
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | AUDIT | Keycloak configuration audit records must identify the outcome of the events."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000015
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | PATCH | Keycloak configuration audit records must identify the outcome of the events."
 #  shell: 
 #  tags:
@@ -245,19 +292,20 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000015
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | AUDIT | Keycloak configuration audit records must identify any individual user or process associated with the event."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000016
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | AUDIT | Keycloak configuration audit records must identify any individual user or process associated with the event."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000016
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | PATCH | Keycloak configuration audit records must identify any individual user or process associated with the event."
 #  shell: 
 #  tags:
@@ -266,11 +314,60 @@
 #    - xccdf_hdf_group_KEYC-01-000016
 #    - patch
 
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part1 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part2 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
   lineinfile:
     path: /opt/keycloak/conf/keycloak.conf
     regexp: '^spi-events-listener-jboss-logging-success-level'
     line: spi-events-listener-jboss-logging-success-level=info
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part3 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^spi-events-listener-jboss-logging-error-level'
+    line: spi-events-listener-jboss-logging-error-level=error
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
+# TODO: incomplete, needs appropriate endpoint and appropriate protocol
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part4 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^quarkus.log.syslog.enable'
+    line: quarkus.log.syslog.enable=true
     state: present
     create: yes
   register: result
@@ -290,19 +387,73 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000017
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000018
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part1 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
+  shell: >
+    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part2 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^spi-events-listener-jboss-logging-success-level'
+    line: spi-events-listener-jboss-logging-success-level=info
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part3 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^spi-events-listener-jboss-logging-error-level'
+    line: spi-events-listener-jboss-logging-error-level=error
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
+# TODO: incomplete, needs appropriate endpoint and appropriate protocol
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part4 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^quarkus.log.syslog.enable'
+    line: quarkus.log.syslog.enable=true
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000017
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | PATCH | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
 #  shell: 
 #  tags:
