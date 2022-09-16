@@ -1,6 +1,8 @@
 # TODO: consider options for multiple realms
 keycloak_realm: master
 
+path: /opt/keycloak/bin/
+
 #enabled_event_types:
 #  - "SEND_RESET_PASSWORD"
 #  - "UPDATE_CONSENT_ERROR"

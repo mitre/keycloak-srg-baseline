@@ -15,7 +15,7 @@
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | AUDIT | Keycloak must be configured to automatically audit account creation."
   # Should this also include CLIENT_REGISTER?
   shell: >
-      /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+      {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
       -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -42,7 +42,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | AUDIT | Keycloak must be configured to automatically audit account modification."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]' 
   register: result
   check_mode: no
@@ -67,7 +67,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | AUDIT | Keycloak must be configured to automatically audit account disabling actions."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -94,7 +94,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | AUDIT | Keycloak must be configured to automatically audit account removal actions."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -116,9 +116,9 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000009 | AUDIT | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period."
   shell: |
-    /opt/keycloak/bin/kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
-    /opt/keycloak/bin/kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor=3'
-    /opt/keycloak/bin/kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds=900'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor=3'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds=900'
   register: result
   check_mode: no
   changed_when: no
@@ -145,7 +145,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | AUDIT | Keycloak must be configured to audit each authentication and authorization transaction."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -167,7 +167,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | AUDIT | Keycloak configuration audit records must identify what type of events occurred."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
   register: result
@@ -190,7 +190,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012_part1 | AUDIT | Keycloak configuration audit records must identify when (date and time) the events occurred."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
   register: result
@@ -250,7 +250,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | AUDIT | Keycloak configuration audit records must identify the source of the events."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -272,7 +272,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | AUDIT | Keycloak configuration audit records must identify the outcome of the events."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
   register: result
@@ -295,7 +295,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | AUDIT | Keycloak configuration audit records must identify any individual user or process associated with the event."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
   changed_when: no
@@ -316,7 +316,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part1 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
   register: result
   check_mode: no
@@ -390,7 +390,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part1 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
   shell: >
-    /opt/keycloak/bin/kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
   register: result
   check_mode: no
