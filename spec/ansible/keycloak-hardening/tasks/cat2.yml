@@ -454,6 +454,8 @@
     - xccdf_hdf_group_KEYC-01-000017
     - audit
 
+# comment
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | PATCH | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
 #  shell: 
 #  tags:
