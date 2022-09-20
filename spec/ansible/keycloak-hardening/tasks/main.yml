@@ -3,3 +3,6 @@
 
 - name: CAT II
   import_tasks: cat2.yml
+
+- name: CAT I
+  import_tasks: cat1.yml

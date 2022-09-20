@@ -1,6 +1,11 @@
 ---
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
-  shell: 
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000022_part1 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^hostname-strict-https'
+    line: hostname-strict-https=true
+    state: present
+    create: yes
   register: result
   check_mode: no
   changed_when: no
@@ -11,111 +16,131 @@
     - xccdf_hdf_group_KEYC-01-000022
     - audit
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | PATCH | Keycloak must be configured to use secure protocols when connecting to directory services."
-  shell: 
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000022_part2 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^https-client-auth'
+    line: https-client-auth=required
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000022
-    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-  shell: 
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000023
     - audit
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | PATCH | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-  shell: 
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000023
-    - patch
+# TODO: more needed for 12, trustStore stuff
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
-  shell: 
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000025
-    - audit
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | PATCH | Keycloak must be configured to uniquely identify and authenticate organizational users."
-  shell: 
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000025
-    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | AUDIT | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
-  shell: 
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000036
-    - audit
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | PATCH | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
-  shell: 
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000036
-    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
-  shell: 
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000040
-    - audit
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | PATCH | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
-  shell: 
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000040
-    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | AUDIT | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
-  shell: 
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000041
-    - audit
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | PATCH | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
-  shell: 
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000041
-    - patch
-
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | PATCH | Keycloak must be configured to use secure protocols when connecting to directory services."
+#  shell:
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000022
+#    - patch
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+#  shell:
+#  register: result
+#  check_mode: no
+#  changed_when: no
+#  ignore_errors: yes
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000023
+#    - audit
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | PATCH | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+#  shell:
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000023
+#    - patch
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
+#  shell:
+#  register: result
+#  check_mode: no
+#  changed_when: no
+#  ignore_errors: yes
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000025
+#    - audit
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | PATCH | Keycloak must be configured to uniquely identify and authenticate organizational users."
+#  shell:
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000025
+#    - patch
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | AUDIT | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
+#  shell:
+#  register: result
+#  check_mode: no
+#  changed_when: no
+#  ignore_errors: yes
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000036
+#    - audit
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | PATCH | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
+#  shell:
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000036
+#    - patch
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
+#  shell:
+#  register: result
+#  check_mode: no
+#  changed_when: no
+#  ignore_errors: yes
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000040
+#    - audit
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | PATCH | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
+#  shell:
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000040
+#    - patch
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | AUDIT | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
+#  shell:
+#  register: result
+#  check_mode: no
+#  changed_when: no
+#  ignore_errors: yes
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000041
+#    - audit
+#
+#- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | PATCH | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
+#  shell:
+#  tags:
+#    - cat1
+#    - high
+#    - xccdf_hdf_group_KEYC-01-000041
+#    - patch
+#

@@ -399,7 +399,7 @@
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000017
+    - xccdf_hdf_group_KEYC-01-000018
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part2 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
@@ -416,7 +416,7 @@
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000017
+    - xccdf_hdf_group_KEYC-01-000018
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part3 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
@@ -433,7 +433,7 @@
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000017
+    - xccdf_hdf_group_KEYC-01-000018
     - audit
 
 # TODO: incomplete, needs appropriate endpoint and appropriate protocol
@@ -451,10 +451,8 @@
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000017
+    - xccdf_hdf_group_KEYC-01-000018
     - audit
-
-# comment
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | PATCH | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
 #  shell: 
@@ -463,19 +461,73 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000018
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000019
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_part1 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000019
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_part2 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^spi-events-listener-jboss-logging-success-level'
+    line: spi-events-listener-jboss-logging-success-level=info
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000019
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_part3 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^spi-events-listener-jboss-logging-error-level'
+    line: spi-events-listener-jboss-logging-error-level=error
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000019
+    - audit
+
+# TODO: incomplete, needs appropriate endpoint and appropriate protocol
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_par4 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^quarkus.log.syslog.enable'
+    line: quarkus.log.syslog.enable=true
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000019
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019 | PATCH | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
 #  shell: 
 #  tags:
@@ -485,7 +537,7 @@
 #    - patch
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | AUDIT | Keycloak must be configured to disable non-essential modules."
-#  shell: 
+#  shell:
 #  register: result
 #  check_mode: no
 #  changed_when: no
@@ -495,7 +547,7 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000021
 #    - audit
-#
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | PATCH | Keycloak must be configured to disable non-essential modules."
 #  shell: 
 #  tags:
@@ -965,7 +1017,7 @@
 #    - patch
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | AUDIT | AAA Services must not be configured with shared accounts."
-#  shell: 
+#  shell:
 #  register: result
 #  check_mode: no
 #  changed_when: no
