@@ -45,9 +45,22 @@
 #    - patch
 
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part1 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+  shell: >
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000023
+    - audit
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part2 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
   lineinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^cache'
+    regexp: '^cache='
     line: cache=ispn
     state: present
     create: yes
@@ -61,7 +74,7 @@
     - xccdf_hdf_group_KEYC-01-000023
     - audit
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part2 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part3 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
   lineinfile:
     path: /opt/keycloak/conf/keycloak.conf
     regexp: '^cache-stack'
@@ -105,19 +118,20 @@
 #    - high
 #    - xccdf_hdf_group_KEYC-01-000025
 #    - patch
-#
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | AUDIT | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000036
-#    - audit
-#
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | AUDIT | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
+  shell: >
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000036
+    - audit
+
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | PATCH | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
 #  shell:
 #  tags:

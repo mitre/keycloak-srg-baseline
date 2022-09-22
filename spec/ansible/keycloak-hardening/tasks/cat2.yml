@@ -1,19 +1,14 @@
 ---
 - name: Create a list variable for enabledEventTypes
-  # Do I need to fetch existing enabledEventTypes first?
+  # TODO: Do I need to fetch existing enabledEventTypes first?
   set_fact:
     enabled_event_types_list: []
-
-- name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
-  set_fact:
-    enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
 
 #- name: enabled_event_types list to string
 #  set_fact:
 #    enabledEventTypes: "{{ '[ ' + enabled_event_types_list | join(', ') + ' ]' }}"
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | AUDIT | Keycloak must be configured to automatically audit account creation."
-  # Should this also include CLIENT_REGISTER?
   shell: >
       {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
       -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
@@ -27,18 +22,23 @@
     - xccdf_hdf_group_KEYC-01-000005
     - audit
 
+- name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
+  # TODO: Should this also include CLIENT_REGISTER?
+  set_fact:
+    enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000005
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | PATCH | Keycloak must be configured to automatically audit account creation."
-#  shell: 
+#  shell:
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000005
 #    - patch
-
-- name: xccdf_hdf_group_KEYC-01-000005 | Update enabled_event_types list
-  set_fact:
-    enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | 
-    unique }}"
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | AUDIT | Keycloak must be configured to automatically audit account modification."
   shell: >
@@ -54,8 +54,15 @@
     - xccdf_hdf_group_KEYC-01-000006
     - audit
 
-#- name: see what we have
-#  debug: var=enabled_event_types
+- name: xccdf_hdf_group_KEYC-01-000006 | Update enabled_event_types list
+  set_fact:
+    enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | 
+    unique }}"
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000006
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | PATCH | Keycloak must be configured to automatically audit account modification."
 #  shell: 
@@ -87,11 +94,6 @@
 #    - xccdf_hdf_group_KEYC-01-000007
 #    - patch
 
-- name: xccdf_hdf_group_KEYC-01-000008 | Update enabled_event_types list
-  set_fact:
-    enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | 
-    unique }}"
-
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | AUDIT | Keycloak must be configured to automatically audit account removal actions."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
@@ -100,6 +102,15 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000008
+    - audit
+
+- name: xccdf_hdf_group_KEYC-01-000008 | Update enabled_event_types list
+  set_fact:
+    enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | unique }}"
   tags:
     - cat2
     - medium
@@ -137,12 +148,6 @@
 #    - xccdf_hdf_group_KEYC-01-000009
 #    - patch
 
-# TODO: need to determine appropriate event types
-#- name: xccdf_hdf_group_KEYC-01-000008 | Update enabled_event_types list
-#  set_fact:
-#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) |
-#    unique }}"
-
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | AUDIT | Keycloak must be configured to audit each authentication and authorization transaction."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
@@ -156,6 +161,16 @@
     - medium
     - xccdf_hdf_group_KEYC-01-000010
     - audit
+
+# TODO: need to determine appropriate event types
+#- name: xccdf_hdf_group_KEYC-01-000010 | Update enabled_event_types list
+#  set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) |unique }}"
+#  tags:
+#    - cat2
+#    - medium
+#    - xccdf_hdf_group_KEYC-01-000010
+#    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | PATCH | Keycloak must be configured to audit each authentication and authorization transaction."
 #  shell: 
@@ -367,7 +382,7 @@
 # TODO: incomplete, needs appropriate endpoint and appropriate protocol
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part4 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
   lineinfile:
-    path: /opt/keycloak/conf/keycloak.conf
+    path: /opt/keycloak/conf/quarkus.properties
     regexp: '^quarkus.log.syslog.enable'
     line: quarkus.log.syslog.enable=true
     state: present
@@ -441,7 +456,7 @@
 # TODO: incomplete, needs appropriate endpoint and appropriate protocol
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part4 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
   lineinfile:
-    path: /opt/keycloak/conf/keycloak.conf
+    path: /opt/keycloak/conf/quarkus.properties
     regexp: '^quarkus.log.syslog.enable'
     line: quarkus.log.syslog.enable=true
     state: present
@@ -515,7 +530,7 @@
 # TODO: incomplete, needs appropriate endpoint and appropriate protocol
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_par4 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
   lineinfile:
-    path: /opt/keycloak/conf/keycloak.conf
+    path: /opt/keycloak/conf/quarkus.properties
     regexp: '^quarkus.log.syslog.enable'
     line: quarkus.log.syslog.enable=true
     state: present
@@ -877,19 +892,21 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000050
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | AUDIT | Keycloak must be configured to automatically audit account enabling actions."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000051
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | AUDIT | Keycloak must be configured to automatically audit account enabling actions."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    -s adminEventsDetailsEnabled=true
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000051
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | PATCH | Keycloak must be configured to automatically audit account enabling actions."
 #  shell: 
 #  tags:
@@ -897,19 +914,20 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000051
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | AUDIT | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000052
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | AUDIT | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners={{events_listeners_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000052
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | PATCH | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
 #  shell: 
 #  tags:
@@ -917,19 +935,22 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000052
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | AUDIT | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000054
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | AUDIT | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
+  shell: |
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'permanentLockout=true'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor=3'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000054
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | PATCH | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
 #  shell: 
 #  tags:

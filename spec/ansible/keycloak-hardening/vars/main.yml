@@ -166,3 +166,6 @@ enabled_event_types_string: >
   "VERIFY_PROFILE",
   "GRANT_CONSENT_ERROR",
   "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR" ]
+
+events_listeners_string: >
+  [ "jboss-logging" ]
