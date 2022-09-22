@@ -1,5 +1,5 @@
 ---
-- hosts: goofy_galois
+- hosts: keycloak
 #  connection: local
 #  become: yes #become sudo
 #  vars:

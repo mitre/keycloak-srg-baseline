@@ -43,19 +43,41 @@
 #    - high
 #    - xccdf_hdf_group_KEYC-01-000022
 #    - patch
-#
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000023
-#    - audit
-#
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part1 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^cache'
+    line: cache=ispn
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000023
+    - audit
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part2 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^cache-stack'
+    line: cache-stack=tcp
+    state: present
+    create: yes
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000023
+    - audit
+
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | PATCH | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
 #  shell:
 #  tags:

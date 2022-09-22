@@ -228,18 +228,20 @@
 #    - xccdf_hdf_group_KEYC-01-000012
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | AUDIT | Keycloak configuration audit records must identify where the events occurred."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000013
-#    - audit
-#
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | AUDIT | Keycloak configuration audit records must identify where the events occurred."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000013
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | PATCH | Keycloak configuration audit records must identify where the events occurred."
 #  shell: 
 #  tags:
