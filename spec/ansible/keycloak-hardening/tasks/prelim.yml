@@ -2,4 +2,16 @@
   shell: /opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
   register: signin
 
-# get events/config put in variable
+#- name: pull jar
+#  block:
+#    - name: fetch jar from github
+#      ansible.builtin.get_url:
+#        url: "{{jarfile_url}}"
+#        dest: /tmp/password-min-time-policy-0.0.1.jar
+#      delegate_to: localhost
+#
+#      vars:
+#        - jarfile_url: https://github-registry-files.githubusercontent.com/521694271/0d242e00-2adc-11ed-8bf5-257df7c6c5ea\?X-Amz-Algorithm\=AWS4-HMAC-SHA256\&X-Amz-Credential\=AKIAIWNJYAX4CSVEH53A%2F20220928%2Fus-east-1%2Fs3%2Faws4_request\&X-Amz-Date\=20220928T205604Z\&X-Amz-Expires\=300\&X-Amz-Signature\=150860c289760ad4eecc363bc0b3ffbc8adebe20fbcda9b0083c58f494a569cf\&X-Amz-SignedHeaders\=host\&actor_id\=0\&key_id\=0\&repo_id\=521694271\&response-content-disposition\=filename%3Dpassword-min-time-policy-0.0.1-20220902.162645-1.jar\&response-content-type\=application%2Foctet-stream
+#  tags:
+#    - xccdf_hdf_group_KEYC-01-000047
+

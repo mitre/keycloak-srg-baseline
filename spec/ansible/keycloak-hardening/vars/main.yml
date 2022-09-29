@@ -1,7 +1,63 @@
 # TODO: consider options for multiple realms
 keycloak_realm: master
 
+user_name: admin
+
+role_policy_name: policy
+
+role_policy_description: policy description
+
 path: /opt/keycloak/bin/
+
+failure_factor: 3
+
+max_delta_time_seconds: 900
+
+quarkus_endpoint: example.syslog.endpoint:514
+
+quarkus_protocol: UDP
+
+quarkus_format: UTC
+
+log_console_format: '%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n'
+
+action_mail_account: administrator@mail.com
+
+https_truststore_file_path: /opt/keycloak/conf/truststore.jks
+
+spi_trust_store_file_path: /opt/keycloak/conf/truststore.jks
+
+spi_trust_store_policy: policy
+
+# If connecting to directory services or other identity provider,
+# choose one of the two following configurations for protocol security
+#security_option: |
+#  https-key-store-file=/opt/keycloak/conf/keystore.jks
+#  https-key-store-password=
+# or
+security_option: |
+  https-certificate-file=/opt/keycloak/conf/cert.pem
+  https-certificate-key-file=/opt/keycloak/conf/cert.crt
+
+profile_properties_features: |
+  feature.account2=disabled
+  feature.account_api=disabled
+  feature.admin_fine_grained_authz=disabled
+  feature.ciba=disabled
+  feature.client_policies=disabled
+  feature.client_secret_rotation=disabled
+  feature.par=disabled
+  feature.declarative_user_profile=disabled
+  feature.docker=disabled
+  feature.impersonation=disabled
+  feature.openshift_integration=disabled
+  feature.recovery_codes=disabled
+  feature.scripts=disabled
+  feature.step_up_authentication=disabled
+  feature.token_exchange=disabled
+  feature.upload_scripts=disabled
+  feature.web_authn=disabled
+  feature.update_email=disabled
 
 #enabled_event_types:
 #  - "SEND_RESET_PASSWORD"

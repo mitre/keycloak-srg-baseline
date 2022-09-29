@@ -1,16 +1,30 @@
 ---
-#- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | AUDIT | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat3
-#    - low
-#    - xccdf_hdf_group_KEYC-01-000053
-#    - audit
-#
+- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | AUDIT | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
+  shell: >
+    {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat3
+    - low
+    - xccdf_hdf_group_KEYC-01-000053
+    - audit
+
+- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | AUDIT | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
+  shell: >
+    {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat3
+    - low
+    - xccdf_hdf_group_KEYC-01-000053
+    - audit
+
 #- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | PATCH | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
 #  shell:
 #  tags:

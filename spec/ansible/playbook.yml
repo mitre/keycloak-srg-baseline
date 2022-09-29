@@ -1,7 +1,7 @@
 ---
 - hosts: keycloak
 #  connection: local
-#  become: yes #become sudo
+#  become: yes
 #  vars:
 #    is_container: false
   roles:

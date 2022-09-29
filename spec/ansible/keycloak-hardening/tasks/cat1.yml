@@ -1,12 +1,14 @@
 ---
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000022_part1 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^hostname-strict-https'
-    line: hostname-strict-https=true
+    block: |
+      hostname-strict-https=true
+      https-client-auth=required
     state: present
     create: yes
-  register: result
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
+  register: twotwo
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -17,13 +19,16 @@
     - audit
 
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000022_part2 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^https-client-auth'
-    line: https-client-auth=required
+    block: |
+      https-trust-store-file={{https_truststore_file_path}}
+      https-trust-store-password=
+      {{security_option}}
     state: present
     create: yes
-  register: result
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - HTTPS TRUST STORE"
+  register: twotwo
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -32,9 +37,6 @@
     - high
     - xccdf_hdf_group_KEYC-01-000022
     - audit
-
-# TODO: more needed for 12, trustStore stuff
-
 
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | PATCH | Keycloak must be configured to use secure protocols when connecting to directory services."
 #  shell:
@@ -58,29 +60,14 @@
     - audit
 
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part2 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^cache='
-    line: cache=ispn
+    block: |
+      cache=ispn
+      cache-stack=tcp
     state: present
     create: yes
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000023
-    - audit
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part3 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-  lineinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^cache-stack'
-    line: cache-stack=tcp
-    state: present
-    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - CACHE"
   register: result
   check_mode: no
   changed_when: no
@@ -98,19 +85,33 @@
 #    - high
 #    - xccdf_hdf_group_KEYC-01-000023
 #    - patch
-#
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000025
-#    - audit
-#
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000025_part1 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
+  shell: >
+    {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000025
+    - audit
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000025_part2 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
+  shell: >
+    {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000025
+    - audit
+
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | PATCH | Keycloak must be configured to uniquely identify and authenticate organizational users."
 #  shell:
 #  tags:
@@ -139,19 +140,48 @@
 #    - high
 #    - xccdf_hdf_group_KEYC-01-000036
 #    - patch
-#
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000040
-#    - audit
-#
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000040_part1 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
+  blockinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    block: |
+      hostname-strict-https=true
+      https-client-auth=required
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000040
+    - audit
+
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000040_part2 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
+  blockinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    block: |
+      spi-truststore-file-file={{spi_trust_store_file_path}}
+      spi-truststore-file-password=
+      spi-truststore-file-hostname-verification-policy={{spi_trust_store_policy}}
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI TRUST STORE"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000040
+    - audit
+
+# TODO: inspect issuer
+
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | PATCH | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
 #  shell:
 #  tags:

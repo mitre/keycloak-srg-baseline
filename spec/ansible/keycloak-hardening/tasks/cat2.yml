@@ -75,7 +75,7 @@
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | AUDIT | Keycloak must be configured to automatically audit account disabling actions."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
-    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s adminEventsDetailsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
   changed_when: no
@@ -128,8 +128,8 @@
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000009 | AUDIT | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period."
   shell: |
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor=3'
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds=900'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor={{failure_factor}}'
+    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds={{max_delta_time_seconds}}'
   register: result
   check_mode: no
   changed_when: no
@@ -180,6 +180,7 @@
 #    - xccdf_hdf_group_KEYC-01-000010
 #    - patch
 
+# TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | AUDIT | Keycloak configuration audit records must identify what type of events occurred."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
@@ -203,6 +204,7 @@
 #    - xccdf_hdf_group_KEYC-01-000011
 #    - patch
 
+# TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012_part1 | AUDIT | Keycloak configuration audit records must identify when (date and time) the events occurred."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
@@ -222,7 +224,7 @@
   lineinfile:
     path: /opt/keycloak/conf/keycloak.conf
     regexp: '^log-console-format'
-    line: log-console-format='%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c{3.}] (%t) %s%e%n'
+    line: log-console-format={{log_console_format}}
     state: present
     create: yes
   register: result
@@ -287,6 +289,7 @@
 #    - xccdf_hdf_group_KEYC-01-000014
 #    - patch
 
+# TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | AUDIT | Keycloak configuration audit records must identify the outcome of the events."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
@@ -331,6 +334,7 @@
 #    - xccdf_hdf_group_KEYC-01-000016
 #    - patch
 
+# TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part1 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
@@ -346,12 +350,14 @@
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part2 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^spi-events-listener-jboss-logging-success-level'
-    line: spi-events-listener-jboss-logging-success-level=info
+    block: |
+      spi-events-listener-jboss-logging-success-level=info
+      spi-events-listener-jboss-logging-error-level=error
     state: present
     create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
   register: result
   check_mode: no
   changed_when: no
@@ -363,12 +369,15 @@
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part3 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
-  lineinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^spi-events-listener-jboss-logging-error-level'
-    line: spi-events-listener-jboss-logging-error-level=error
+  blockinfile:
+    path: /opt/keycloak/conf/quarkus.properties
+    block: |
+      quarkus.log.syslog.enable=true
+      quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+      quarkus.log.syslog.protocol={{quarkus_protocol}}
     state: present
     create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
   register: result
   check_mode: no
   changed_when: no
@@ -379,12 +388,11 @@
     - xccdf_hdf_group_KEYC-01-000017
     - audit
 
-# TODO: incomplete, needs appropriate endpoint and appropriate protocol
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017_part4 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
   lineinfile:
-    path: /opt/keycloak/conf/quarkus.properties
-    regexp: '^quarkus.log.syslog.enable'
-    line: quarkus.log.syslog.enable=true
+    path: /etc/audit/auditd.conf
+    regexp: '^action_mail_acct = '
+    line: action_mail_acct = {{action_mail_account}}
     state: present
     create: yes
   register: result
@@ -405,6 +413,7 @@
 #    - xccdf_hdf_group_KEYC-01-000017
 #    - patch
 
+# TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part1 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
@@ -420,12 +429,14 @@
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part2 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^spi-events-listener-jboss-logging-success-level'
-    line: spi-events-listener-jboss-logging-success-level=info
+    block: |
+      spi-events-listener-jboss-logging-success-level=info
+      spi-events-listener-jboss-logging-error-level=error
     state: present
     create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
   register: result
   check_mode: no
   changed_when: no
@@ -437,12 +448,15 @@
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part3 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
-  lineinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^spi-events-listener-jboss-logging-error-level'
-    line: spi-events-listener-jboss-logging-error-level=error
+  blockinfile:
+    path: /opt/keycloak/conf/quarkus.properties
+    block: |
+      quarkus.log.syslog.enable=true
+      quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+      quarkus.log.syslog.protocol={{quarkus_protocol}}
     state: present
     create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
   register: result
   check_mode: no
   changed_when: no
@@ -453,23 +467,7 @@
     - xccdf_hdf_group_KEYC-01-000018
     - audit
 
-# TODO: incomplete, needs appropriate endpoint and appropriate protocol
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018_part4 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
-  lineinfile:
-    path: /opt/keycloak/conf/quarkus.properties
-    regexp: '^quarkus.log.syslog.enable'
-    line: quarkus.log.syslog.enable=true
-    state: present
-    create: yes
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000018
-    - audit
+# TODO: syslog is configured to alert the SA and ISSO when any audit processing failure occurs?
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | PATCH | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
 #  shell: 
@@ -479,6 +477,7 @@
 #    - xccdf_hdf_group_KEYC-01-000018
 #    - patch
 
+# TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_part1 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
@@ -494,12 +493,14 @@
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_part2 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^spi-events-listener-jboss-logging-success-level'
-    line: spi-events-listener-jboss-logging-success-level=info
+    block: |
+      spi-events-listener-jboss-logging-success-level=info
+      spi-events-listener-jboss-logging-error-level=error
     state: present
     create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
   register: result
   check_mode: no
   changed_when: no
@@ -511,12 +512,15 @@
     - audit
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_part3 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
-  lineinfile:
+  blockinfile:
     path: /opt/keycloak/conf/keycloak.conf
-    regexp: '^spi-events-listener-jboss-logging-error-level'
-    line: spi-events-listener-jboss-logging-error-level=error
+    block: |
+      quarkus.log.syslog.enable=true
+      quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+      quarkus.log.syslog.protocol={{quarkus_protocol}}
     state: present
     create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
   register: result
   check_mode: no
   changed_when: no
@@ -527,23 +531,7 @@
     - xccdf_hdf_group_KEYC-01-000019
     - audit
 
-# TODO: incomplete, needs appropriate endpoint and appropriate protocol
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019_par4 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
-  lineinfile:
-    path: /opt/keycloak/conf/quarkus.properties
-    regexp: '^quarkus.log.syslog.enable'
-    line: quarkus.log.syslog.enable=true
-    state: present
-    create: yes
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000019
-    - audit
+# TODO: log service is enabled on the system?
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019 | PATCH | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
 #  shell: 
@@ -552,18 +540,25 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000019
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | AUDIT | Keycloak must be configured to disable non-essential modules."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000021
-#    - audit
+
+# TODO: Where does profile.properties go?
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | AUDIT | Keycloak must be configured to disable non-essential modules."
+  blockinfile:
+    path: /opt/keycloak/conf/profile.properties
+    block: |
+      {{profile_properties_features}}
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - PROFILE FEATURES"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000021
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | PATCH | Keycloak must be configured to disable non-essential modules."
 #  shell: 
@@ -572,7 +567,8 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000021
 #    - patch
-#
+
+# TODO: applicable in a container?
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | AUDIT | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
 #  shell: 
 #  register: result
@@ -812,9 +808,19 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000043
 #    - patch
+
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
+#  copy:
+#    src: /Users/bwarren/testdoc.txt
+#    dest: /opt/keycloak/testdocument.txt
+#  tags:
+#    - cat2
+#    - medium
+#    - xccdf_hdf_group_KEYC-01-000047
+#    - audit
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
-#  shell: 
+#  shell:
 #  register: result
 #  check_mode: no
 #  changed_when: no
@@ -824,7 +830,7 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000047
 #    - audit
-#
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
 #  shell: 
 #  tags:
@@ -940,7 +946,6 @@
   shell: |
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'permanentLockout=true'
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor=3'
   register: result
   check_mode: no
   changed_when: no
@@ -958,19 +963,60 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000054
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055 | AUDIT | Keycloak must be configured to send audit records to a centralized audit server."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000055
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055_part1 | AUDIT | Keycloak must be configured to send audit records to a centralized audit server."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000055
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055_part2 | AUDIT | Keycloak must be configured to send audit records to a centralized audit server."
+  blockinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    block: |
+      spi-events-listener-jboss-logging-success-level=info
+      spi-events-listener-jboss-logging-error-level=error
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000055
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055_part3 | AUDIT | Keycloak must be configured to send audit records to a centralized audit server."
+  blockinfile:
+    path: /opt/keycloak/conf/quarkus.properties
+    block: |
+      quarkus.log.syslog.enable=true
+      quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+      quarkus.log.syslog.protocol={{quarkus_protocol}}
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000055
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055 | PATCH | Keycloak must be configured to send audit records to a centralized audit server."
 #  shell: 
 #  tags:
@@ -978,19 +1024,62 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000055
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056 | AUDIT | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000056
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056_part1 | AUDIT | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000056
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056_part2 | AUDIT | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
+  blockinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    block: |
+      spi-events-listener-jboss-logging-success-level=info
+      spi-events-listener-jboss-logging-error-level=error
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000056
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056_part3 | AUDIT | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
+  blockinfile:
+    path: /opt/keycloak/conf/quarkus.properties
+    block: |
+      quarkus.log.syslog.enable=true
+      quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+      quarkus.log.syslog.protocol={{quarkus_protocol}}
+      quarkus.log.syslog.format={{quarkus_format}}
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000056
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056 | PATCH | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
 #  shell: 
 #  tags:
@@ -998,19 +1087,65 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000056
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057 | AUDIT | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000057
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057_part1 | AUDIT | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    -s 'enabledEventTypes={{enabled_event_types_string}}'
+  register: result
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000057
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057_part2 | AUDIT | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
+  blockinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    block: |
+      spi-events-listener-jboss-logging-success-level=info
+      spi-events-listener-jboss-logging-error-level=error
+    state: present
+    create: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
+  register: fiveseven
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000057
+    - audit
+
+- debug: msg="{{fiveseven}}"
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000057
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057_part3 | AUDIT | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
+  lineinfile:
+    path: /opt/keycloak/conf/keycloak.conf
+    regexp: '^log-console-format'
+    line: log-console-format={{log_console_format}}
+    state: present
+    create: yes
+  register: fiveseven
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000057
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057 | PATCH | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
 #  shell: 
 #  tags:
