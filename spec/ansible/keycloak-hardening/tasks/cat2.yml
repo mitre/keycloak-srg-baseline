@@ -809,16 +809,16 @@
 #    - xccdf_hdf_group_KEYC-01-000043
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
-#  copy:
-#    src: /Users/bwarren/testdoc.txt
-#    dest: /opt/keycloak/testdocument.txt
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000047
-#    - audit
-#
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
+  copy:
+    src: /tmp/password-min-time-policy-0.0.1.jar
+    dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000047
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
 #  shell:
 #  register: result
