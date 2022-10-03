@@ -29,6 +29,11 @@ spi_trust_store_file_path: /opt/keycloak/conf/truststore.jks
 
 spi_trust_store_policy: policy
 
+authentication_flow_id:
+
+jarfile_url: https://maven.pkg.github.com/mitre/keycloak-custom-policies/org/keycloak/policy/password-min-time-policy/0.0.1-SNAPSHOT/password-min-time-policy-0.0.1-20220902.182228-2.jar
+
+
 # If connecting to directory services or other identity provider,
 # choose one of the two following configurations for protocol security
 #security_option: |

@@ -8,7 +8,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
-  register: twotwo
+  register: 22-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -28,7 +28,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - HTTPS TRUST STORE"
-  register: twotwo
+  register: 22-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -49,7 +49,7 @@
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part1 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
   shell: >
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
-  register: result
+  register: 23-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -68,7 +68,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - CACHE"
-  register: result
+  register: 23-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -89,7 +89,7 @@
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000025_part1 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
   shell: >
     {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
-  register: result
+  register: 25-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -102,7 +102,7 @@
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000025_part2 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
   shell: >
     {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
-  register: result
+  register: 25-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -123,7 +123,7 @@
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | AUDIT | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
   shell: >
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
-  register: result
+  register: 36
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -150,7 +150,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
-  register: result
+  register: 40-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -170,7 +170,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI TRUST STORE"
-  register: result
+  register: 40-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -189,10 +189,10 @@
 #    - high
 #    - xccdf_hdf_group_KEYC-01-000040
 #    - patch
-#
+
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | AUDIT | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
 #  shell:
-#  register: result
+#  register: 41
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -201,7 +201,7 @@
 #    - high
 #    - xccdf_hdf_group_KEYC-01-000041
 #    - audit
-#
+
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | PATCH | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
 #  shell:
 #  tags:

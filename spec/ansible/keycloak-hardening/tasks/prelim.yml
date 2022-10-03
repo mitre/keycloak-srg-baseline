@@ -15,6 +15,6 @@
 
       vars:
         - jarfile_url: https://maven.pkg.github.com/mitre/keycloak-custom-policies/org/keycloak/policy/password-min-time-policy/0.0.1-SNAPSHOT/password-min-time-policy-0.0.1-20220902.182228-2.jar
-#        - github_pat:
+        - github_pat:
   tags:
     - xccdf_hdf_group_KEYC-01-000047

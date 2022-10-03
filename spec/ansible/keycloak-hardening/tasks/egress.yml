@@ -1,0 +1,24 @@
+- name: Restart Keycloak
+  delegate_to: localhost
+  docker_container:
+    name: keycloak
+    image: quay.io/keycloak/keycloak:18.0.2
+    state: started
+    restart: yes
+    comparisons:
+      '*': ignore
+#    links:
+#      - "myredis:aliasedredis"
+#    devices:
+#      - "/dev/sda:/dev/xvda:rwm"
+    ports:
+      - "8080:8080"
+#      - "127.0.0.1:8081:9001/udp"
+    env:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+  tags:
+    - xccdf_hdf_group_KEYC-01-000047
+    - xccdf_hdf_group_KEYC-01-000048
+    - xccdf_hdf_group_KEYC-01-000049
+    - xccdf_hdf_group_KEYC-01-000050

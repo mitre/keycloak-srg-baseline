@@ -12,7 +12,7 @@
   shell: >
       {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
       -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 5
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -44,7 +44,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]' 
-  register: result
+  register: 6
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -76,7 +76,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 7
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -98,7 +98,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 8
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -130,7 +130,7 @@
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor={{failure_factor}}'
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds={{max_delta_time_seconds}}'
-  register: result
+  register: 9
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -152,7 +152,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 10
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -186,7 +186,7 @@
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 11
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -210,7 +210,7 @@
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 12-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -227,7 +227,7 @@
     line: log-console-format={{log_console_format}}
     state: present
     create: yes
-  register: result
+  register: 12-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -249,7 +249,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 13
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -271,7 +271,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 14
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -295,7 +295,7 @@
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 15
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -316,7 +316,7 @@
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | AUDIT | Keycloak configuration audit records must identify any individual user or process associated with the event."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
+  register: 16
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -339,7 +339,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 17-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -358,7 +358,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
-  register: result
+  register: 17-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -378,7 +378,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  register: result
+  register: 17-3
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -395,7 +395,7 @@
     line: action_mail_acct = {{action_mail_account}}
     state: present
     create: yes
-  register: result
+  register: 17-4
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -418,7 +418,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 18-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -437,7 +437,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
-  register: result
+  register: 18-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -457,7 +457,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  register: result
+  register: 18-3
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -482,7 +482,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 19-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -501,7 +501,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
-  register: result
+  register: 19-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -521,7 +521,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  register: result
+  register: 19-3
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -550,7 +550,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - PROFILE FEATURES"
-  register: result
+  register: 21
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -571,7 +571,7 @@
 # TODO: applicable in a container?
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | AUDIT | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
 #  shell: 
-#  register: result
+#  register: 24
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -588,10 +588,14 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000024
 #    - patch
-#
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | AUDIT | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
-#  shell: 
-#  register: result
+#  shell: |
+#    {{path}}kcadm.sh create authentication/flows/browser/copy -s 'providerId=basic_flow'
+#    {{path}}kcadm.sh update authentication/flows/
+#    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor={{failure_factor}}'
+#    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds={{max_delta_time_seconds}}'
+#  register: 26
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -600,7 +604,7 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000026
 #    - audit
-#
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | PATCH | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
 #  shell: 
 #  tags:
@@ -611,7 +615,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000027 | AUDIT | Keycloak must be configured to require multifactor authentication using Common Access Card (CAC) Personal Identity Verification (PIV) credentials for authenticating non-privileged user accounts."
 #  shell: 
-#  register: result
+#  register: 27
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -631,7 +635,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | AUDIT | Keycloak must be configured to enforce a minimum 15-character password length."
 #  shell: 
-#  register: result
+#  register: 29
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -651,7 +655,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | AUDIT | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
 #  shell: 
-#  register: result
+#  register: 30
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -671,7 +675,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
 #  shell: 
-#  register: result
+#  register: 31
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -691,7 +695,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
 #  shell: 
-#  register: result
+#  register: 32
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -711,7 +715,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
 #  shell: 
-#  register: result
+#  register: 33
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -731,7 +735,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
 #  shell: 
-#  register: result
+#  register: 34
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -751,7 +755,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | AUDIT | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
 #  shell: 
-#  register: result
+#  register: 38
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -771,7 +775,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | AUDIT | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
 #  shell: 
-#  register: result
+#  register: 39
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -791,7 +795,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000043 | AUDIT | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication."
 #  shell: 
-#  register: result
+#  register: 43
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -809,7 +813,20 @@
 #    - xccdf_hdf_group_KEYC-01-000043
 #    - patch
 
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047_part1 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: 47-1
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000047
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047_part2 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
   copy:
     src: /tmp/password-min-time-policy-0.0.1.jar
     dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
@@ -819,18 +836,6 @@
     - xccdf_hdf_group_KEYC-01-000047
     - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
-#  shell:
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000047
-#    - audit
-
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
 #  shell: 
 #  tags:
@@ -838,19 +843,30 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000047
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000048
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048_part1 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: 48-1
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000048
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048_part2 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
+  copy:
+    src: /tmp/password-min-time-policy-0.0.1.jar
+    dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000048
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
 #  shell: 
 #  tags:
@@ -858,19 +874,30 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000048
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000049
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049_part1 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: 49-1
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000049
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049_part2 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
+  copy:
+    src: /tmp/password-min-time-policy-0.0.1.jar
+    dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000049
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049 | PATCH | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
 #  shell: 
 #  tags:
@@ -878,19 +905,30 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000049
 #    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000050
-#    - audit
-#
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050_part1 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
+  shell: >
+    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+  register: 50-1
+  check_mode: no
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000050
+    - audit
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050_part2 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
+  copy:
+    src: /tmp/password-min-time-policy-0.0.1.jar
+    dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000050
+    - audit
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050 | PATCH | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
 #  shell: 
 #  tags:
@@ -903,7 +941,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true
-  register: result
+  register: 51
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -924,7 +962,7 @@
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | AUDIT | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners={{events_listeners_string}}'
-  register: result
+  register: 52
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -946,7 +984,7 @@
   shell: |
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
     {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'permanentLockout=true'
-  register: result
+  register: 54
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -968,7 +1006,7 @@
   shell: >
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 55-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -987,7 +1025,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
-  register: result
+  register: 55-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -1007,7 +1045,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  register: result
+  register: 55-3
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -1030,7 +1068,7 @@
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 56-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -1049,7 +1087,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
-  register: result
+  register: 56-2
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -1070,7 +1108,7 @@
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  register: result
+  register: 56-3
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -1093,7 +1131,7 @@
     {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{enabled_event_types_string}}'
-  register: result
+  register: 57-1
   check_mode: no
   changed_when: no
   ignore_errors: yes
@@ -1116,13 +1154,6 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000057
-    - audit
-
-- debug: msg="{{fiveseven}}"
   tags:
     - cat2
     - medium
@@ -1156,7 +1187,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | AUDIT | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
 #  shell: 
-#  register: result
+#  register: 59
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
@@ -1176,7 +1207,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | AUDIT | AAA Services must not be configured with shared accounts."
 #  shell:
-#  register: result
+#  register: 64
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
