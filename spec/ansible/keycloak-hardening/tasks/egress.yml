@@ -1,12 +1,12 @@
-- name: Restart Keycloak
+- name: Restart Keycloak container
   delegate_to: localhost
   docker_container:
     name: keycloak
     image: quay.io/keycloak/keycloak:18.0.2
-    state: started
+    state: present
     restart: yes
-    comparisons:
-      '*': ignore
+#    comparisons:
+#      '*': ignore
 #    links:
 #      - "myredis:aliasedredis"
 #    devices:

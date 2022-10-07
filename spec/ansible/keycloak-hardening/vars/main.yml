@@ -33,6 +33,7 @@ authentication_flow_id:
 
 jarfile_url: https://maven.pkg.github.com/mitre/keycloak-custom-policies/org/keycloak/policy/password-min-time-policy/0.0.1-SNAPSHOT/password-min-time-policy-0.0.1-20220902.182228-2.jar
 
+flow_alias: example alias
 
 # If connecting to directory services or other identity provider,
 # choose one of the two following configurations for protocol security
