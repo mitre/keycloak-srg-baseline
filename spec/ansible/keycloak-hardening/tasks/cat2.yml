@@ -692,18 +692,41 @@
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000031
 #    - patch
+
 #
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000032
-#    - audit
+# "{{path}}kcadm.sh get realms/{{keycloak_realm}} --fields passwordPolicy | grep -o '\"passwordPolicy\" : \"[^\"]*' |  grep -o '[^\"]*$' "
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
+  block: 
+    - shell: > 
+        {{path}}kcadm.sh get realms/{{keycloak_realm}} --fields passwordPolicy | grep -o '"passwordPolicy\" : "[^"]*' |  grep -o '[^"]*$'
+      register: passwordPolicy
+
+    # with password policy lowerCase(10), this will return 10
+    - shell: > 
+        {{path}}kcadm.sh get realms/{{keycloak_realm}} --fields passwordPolicy | grep -o '"passwordPolicy\" : "[^"]*' |  grep -o '[^"]*$'| grep -o 'lowerCase([1-9]*)' | grep -o '[1-9]*'
+      register: comparison_number
+      check_mode: no
+      ignore_errors: yes
+      
+    - set_fact:
+        password_policy: "{{passwordPolicy}}"
+
+    - set_fact:
+        password_policy: "{{ password_policy + ' and length(3)'}}"
+
+    - name: Debug current password policy
+      ansible.builtin.debug: 
+        msg: "{{ comparison_number }}"
+
+    - name: Update password policy
+      shell: >
+        {{path}}kcadm.sh update realms/{{keycloak_realm}} -s passwordPolicy="{{password_policy}}"
+  tags:
+   - cat2
+   - medium
+   - xccdf_hdf_group_KEYC-01-000032
+   - audit
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
 #  shell: 
