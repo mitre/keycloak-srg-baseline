@@ -192,140 +192,78 @@
 
 - name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | AUDIT | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
   block:
-    - name: get current browser flows
-      shell: >
-        {{path}}kcadm.sh get authentication/flows/browser/executions
-      register: initial_browser_flows
-      ignore_errors: no
-
-    - name: set initial browser flows in json
-      set_fact:
-        initial_json_browser_flows: "{{ initial_browser_flows.stdout | from_json | community.general.json_query('[*]') }}"
-
-    - debug:
-        msg: initial browser flows="{{initial_json_browser_flows}}"
-
-    - name: set initial browser flows' providerIds to array
-      set_fact:
-        initial_browser_provider_ids: "{{ initial_json_browser_flows | community.general.json_query('[*].providerId') }}"
-
-    - debug:
-        msg: "{{initial_browser_provider_ids}}"
-
-    # The following is executed on the condition that ... was not found
-    - name: get current authentication flows
+    - name: get current flows
       shell: >
         {{path}}kcadm.sh get authentication/flows
       register: initial_flows
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
       ignore_errors: no
 
-    - name: set initial flows in json
+    - name: set initial flows' authenticators in json
       set_fact:
-        initial_json_flows: "{{ initial_flows.stdout | from_json | community.general.json_query('[*]') }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+        initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
 
-    - debug:
-        msg: initial flows="{{initial_json_flows}}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-    - name: set initial flows' ids to array
+    - name: set initial flows' authenticator to array
       set_fact:
-        initial_ids: "{{ initial_json_flows | community.general.json_query('[*].id') }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+        initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
 
-    - debug:
-        msg: "{{initial_ids}}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+    # The following is executed on the condition that auth-509-client-username-form was not found
+    - block:
+      - name: set initial flows' ids in json
+        set_fact:
+          initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
-    - name: create a copy of browser authentication flow
-      shell: |
-        {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-        {{path}}kcadm.sh get authentication/flows
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-      register: new_flows
-      check_mode: no
-      changed_when: no
-      ignore_errors: no
+      - name: set initial flows' ids to array
+        set_fact:
+          initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
-    - name: set new flows in json
-      set_fact:
-        new_json_flows: "{{ new_flows.stdout | from_json | community.general.json_query('[*]') }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: create a copy of browser authentication flow
+        shell: |
+          {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
+          {{path}}kcadm.sh get authentication/flows
+        register: new_flows
+        check_mode: no
+        changed_when: no
+        ignore_errors: no
 
-    - debug:
-        msg: "{{new_json_flows}}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: set new flows in json
+        set_fact:
+          new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
-    - name: new flows' ids to array
-      set_fact:
-        new_ids: "{{ new_json_flows | community.general.json_query('[*].id') }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: set variable for new flow id
+        set_fact:
+          new_id: "{{ new_ids | difference(initial_ids) | list }}"
 
-    - debug:
-        msg: "{{new_ids}}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: update new flow's alias
+        shell: |
+          {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"x509_alias\"
+        ignore_errors: no
 
-    - name: display authentication flow id differences
-      ansible.utils.fact_diff:
-        before: "{{initial_ids}}"
-        after: "{{new_ids}}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: update new flow's execution
+        shell: |
+          {{path}}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
+        register: success
+        ignore_errors: no
 
-    - debug:
-        msg: "new id: {{ new_ids | difference(initial_ids) | list }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: get new flows execution
+        shell: |
+          {{path}}kcadm.sh get authentication/flows/x509_alias/executions
+        register: custom_flow
+        ignore_errors: no
 
-    - name: set variable for new flow id
-      set_fact:
-        new_id: "{{ new_ids | difference(initial_ids) | list }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: set new flow in json
+        set_fact:
+          custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
 
-    - name: update new flow's alias
-      shell: |
-        {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"flow_alias\"
-      ignore_errors: no
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
+      - name: get x509 execution id
+        set_fact:
+          x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-x509-client-username-form`].id') }}"
 
-    - name: update new flow's execution
-      shell: |
-        {{path}}kcadm.sh create authentication/flows/flow_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
-      ignore_errors: no
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-    - name: get new flows execution
-      shell: |
-        {{path}}kcadm.sh get authentication/flows/flow_alias/executions
-      register: custom_flow
-      ignore_errors: no
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-    - name: set new flow in json
-      set_fact:
-        custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-    - debug:
-        msg: custom flow="{{custom_json_flow}}"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-    - name: get x509 execution id
-      set_fact:
-        loop: "{{ custom_json_flow | community.general.json_query(x509_id_query) }}"
-      vars:
-        x509_id_query: "[?providerId=='auth-x509-client-username-form'].id"
-      register: x509_id
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-    - name: display x509 execution id
-      debug:
-        var: item
-      loop: "{{ custom_json_flow | community.general.json_query(x509_id_query) }}"
-      vars:
-        x509_id_query: "[?providerId=='auth-x509-client-username-form'].id"
-      when: '"auth-x509-client-username-form" not in initial_browser_provider_ids'
-
-  #    - name:
+      - name: create config
+        shell: |
+          {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"x509_timestamp"}'
+        register: x509_timestamp
+        ignore_errors: no
+      when: '"auth-x509-client-username-form" not in initial_authenticators'
   tags:
     - cat1
     - high
