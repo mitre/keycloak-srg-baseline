@@ -1,37 +1,34 @@
 ---
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000022_part1 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
-  blockinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    block: |
-      hostname-strict-https=true
-      https-client-auth=required
-    state: present
-    create: yes
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000022
-    - audit
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
+  block:
+    - name: Set protocols in keycloak.conf
+      blockinfile:
+        path: /opt/keycloak/conf/keycloak.conf
+        block: |
+          hostname-strict-https=true
+          https-client-auth=required
+        state: present
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000022_part2 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
-  blockinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    block: |
-      https-trust-store-file={{https_truststore_file_path}}
-      https-trust-store-password=
-      {{security_option}}
-    state: present
-    create: yes
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - HTTPS TRUST STORE"
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+    - name: Set HTTPS TrustStore in keycloak.conf
+      blockinfile:
+        path: /opt/keycloak/conf/keycloak.conf
+        block: |
+          https-trust-store-file={{https_truststore_file_path}}
+          https-trust-store-password=
+          {{security_option}}
+        state: present
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - HTTPS TRUST STORE"
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
   tags:
     - cat1
     - high
@@ -46,32 +43,29 @@
 #    - xccdf_hdf_group_KEYC-01-000022
 #    - patch
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part1 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-  shell: >
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000023
-    - audit
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+  block:
+    - name: Set password hash algorithm
+      shell: >
+        {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023_part2 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-  blockinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    block: |
-      cache=ispn
-      cache-stack=tcp
-    state: present
-    create: yes
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - CACHE"
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+    - name: Set cache in keycloak.conf
+      blockinfile:
+        path: /opt/keycloak/conf/keycloak.conf
+        block: |
+          cache=ispn
+          cache-stack=tcp
+        state: present
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - CACHE"
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
   tags:
     - cat1
     - high
@@ -86,26 +80,23 @@
 #    - xccdf_hdf_group_KEYC-01-000023
 #    - patch
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000025_part1 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
-  shell: >
-    {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000025
-    - audit
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
+  block:
+    - name: Create realm role
+      shell: >
+        {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000025_part2 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
-  shell: >
-    {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+    - name: Create user in realm
+      shell: >
+        {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
   tags:
     - cat1
     - high
@@ -141,39 +132,36 @@
 #    - xccdf_hdf_group_KEYC-01-000036
 #    - patch
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000040_part1 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
-  blockinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    block: |
-      hostname-strict-https=true
-      https-client-auth=required
-    state: present
-    create: yes
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000040
-    - audit
+- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
+  block:
+    - name: Set protocols in keycloak.conf
+      blockinfile:
+        path: /opt/keycloak/conf/keycloak.conf
+        block: |
+          hostname-strict-https=true
+          https-client-auth=required
+        state: present
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
 
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000040_part2 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
-  blockinfile:
-    path: /opt/keycloak/conf/keycloak.conf
-    block: |
-      spi-truststore-file-file={{spi_trust_store_file_path}}
-      spi-truststore-file-password=
-      spi-truststore-file-hostname-verification-policy={{spi_trust_store_policy}}
-    state: present
-    create: yes
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI TRUST STORE"
-  register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+    - name: Set spi trust store in keycloak.conf
+      blockinfile:
+        path: /opt/keycloak/conf/keycloak.conf
+        block: |
+          spi-truststore-file-file={{spi_trust_store_file_path}}
+          spi-truststore-file-password=
+          spi-truststore-file-hostname-verification-policy={{spi_trust_store_policy}}
+        state: present
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI TRUST STORE"
+      register: result
+      check_mode: no
+      changed_when: no
+      ignore_errors: yes
   tags:
     - cat1
     - high
