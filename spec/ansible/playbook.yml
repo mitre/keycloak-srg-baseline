@@ -2,6 +2,7 @@
 - hosts: keycloak
 #  connection: local
 #  become: yes
+  user: root
 #  vars:
 #    is_container: false
   roles:

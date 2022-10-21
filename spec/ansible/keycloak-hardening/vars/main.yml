@@ -43,6 +43,27 @@ flow_alias: example alias
 
 dod_certificate_url: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip
 
+https_certificate_files: cert.crt
+
+https_certificate_files_path: /opt/keycloak/conf/cert.crt
+
+https_certificate_key_files: cert.pem
+
+https_certificate_key_files_path: /opt/keycloak/conf/cert.pem
+
+generate_certificates: true
+
+certificate_common_name: keycloak.example.com
+
+certificate_organization_name: U.S. Government
+
+#certificate_subject_alt_names:
+#  -
+
+certificate_country_name: US
+
+certificate_organizational_unit: DoD
+
 # If connecting to directory services or other identity provider,
 # choose one of the two following configurations for protocol security
 #security_option: |
@@ -50,8 +71,8 @@ dod_certificate_url: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/cer
 #  https-key-store-password=password
 # or
 security_option: |
-  https-certificate-file=/opt/keycloak/conf/cert.pem
-  https-certificate-key-file=/opt/keycloak/conf/cert.crt
+  https-certificate-file={{https_certificate_files_path}}
+  https-certificate-key-file={{https_certificate_key_files_path}}
 
 profile_properties_features: |
   feature.account2=disabled

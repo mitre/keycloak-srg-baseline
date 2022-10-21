@@ -21,6 +21,73 @@
   tags:
     - xccdf_hdf_group_KEYC-01-000047
 
+
+- name: Upgrade pip
+  ansible.builtin.pip:
+    name: pip
+    state: present
+    extra_args: --upgrade
+  tags: test
+
+- name: Install pip dependencies
+  ansible.builtin.pip:
+    name:
+#      - python3-dnf
+      - setuptools
+      - virtualenv
+      - cryptography
+    state: present
+  tags: test
+
+#- name: Install ntpdate
+#  ansible.builtin.package:
+#    name:
+#      - update
+#      - unzip
+#    state: present
+#  tags: test
+
+
+
+- name: HTTPS Certificate Configuration
+  block:
+    - name: Copy SSL Certificate
+      copy:
+        src: "{{https_certificate_files}}"
+        dest: "{{https_certificate_files_path}}"
+
+    - name: Copy SSL Key Certificate
+      copy:
+        src: "{{https_certificate_key_files}}"
+        dest: "{{https_certificate_key_files_path}}"
+  when: not generate_certificates
+  tags: test
+
+- name: Generate a Self Signed OpenSSL certificate
+  block:
+    - debug: msg="Warning, Ansible is creating a self-signed certificate for Keycloak, this should not be done in production"
+    - name: Create private key (RSA, 4096 bits)
+      community.crypto.openssl_privatekey:
+        path: "{{https_certificate_key_files_path}}"
+    - name: Create certificate signing request (CSR) for self-signed certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: "{{https_certificate_key_files_path}}"
+        common_name: "{{certificate_common_name}}"
+        organization_name: "{{certificate_organization_name}}"
+#        subject_alt_name: "{{certificate_subject_alt_names}}"
+        country_name: "{{certificate_country_name}}"
+        organizational_unit_name: "{{certificate_organizational_unit}}"
+      register: csr
+
+    - name: Create self-signed certificate from CSR
+      community.crypto.x509_certificate:
+        path: "{{https_certificate_files_path}}"
+        csr_content: "{{ csr.csr }}"
+        privatekey_path: "{{https_certificate_key_files_path}}"
+        provider: selfsigned
+  when: generate_certificates
+  tags: test
+
 - name: Set up TrustStore
   block:
     - name: Obtain Certificate
@@ -42,7 +109,7 @@
       java_cert:
         cert_path: "{{keycloak_home}}/DoD_CAs.pem"
         keystore_path: "{{spi_trust_store_file_path}}"
-        keystore_pass: changeit
+        keystore_pass: "{{spi_trust_store_password}}"
         keystore_create: true
         state: present
         cert_alias: DoD_CAs

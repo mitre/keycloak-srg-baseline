@@ -15,30 +15,6 @@
       changed_when: no
       ignore_errors: yes
 
-#    - name: Unbundle the pkcs7 file into a root CA cert chain
-
-#    - name: Prepare truststore
-#      shell: |
-#        {{path}}kcadm.sh start --https-trust-store-file={{https_truststore_file_path}}
-#        {{path}}kcadm.sh start --https-trust-store-password=admin{{https_truststore_password}}
-#        {{path}}kcadm.sh start --spi-truststore-file-file={{spi_trust_store_file_path}}
-#        {{path}}kcadm.sh start --spi-truststore-file-password=admin --spi-truststore-file-hostname-verification-policy=ANY
-#      register: result
-#      check_mode: no
-#      changed_when: no
-#      ignore_errors: yes
-
-#    - name: Set password in trust
-#      lineinfile:
-#        path: "{{https_truststore_file_path}}"
-#        regexp: '^password'
-#        line: password=admin
-#        state: present
-#        create: yes
-#      register: result
-#      check_mode: no
-#      changed_when: no
-#      ignore_errors: yes
 
     - name: Set HTTPS TrustStore in keycloak.conf
       blockinfile:

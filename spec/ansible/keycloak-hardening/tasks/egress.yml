@@ -8,7 +8,7 @@
     - name: Pause
       delegate_to: localhost
       wait_for:
-        timeout: 15
+        timeout: 5
 
     - name: Start
       delegate_to: localhost
