@@ -208,7 +208,7 @@
 
     - name: Set log console formant in keycloak.conf
       lineinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         regexp: '^log-console-format'
         line: log-console-format={{log_console_format}}
         state: present
@@ -334,7 +334,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -348,7 +348,7 @@
 
     - name: Set quarkus syslog in quarkus.properties
       blockinfile:
-        path: /opt/keycloak/conf/quarkus.properties
+        path: "{{keycloak_home}}/conf/quarkus.properties"
         block: |
           quarkus.log.syslog.enable=true
           quarkus.log.syslog.endpoint={{quarkus_endpoint}}
@@ -400,7 +400,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -414,7 +414,7 @@
 
     - name: Set quarkus syslog in quarkus.properties
       blockinfile:
-        path: /opt/keycloak/conf/quarkus.properties
+        path: "{{keycloak_home}}/conf/quarkus.properties"
         block: |
           quarkus.log.syslog.enable=true
           quarkus.log.syslog.endpoint={{quarkus_endpoint}}
@@ -456,7 +456,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -470,7 +470,7 @@
 
     - name: Set quarkus syslog in quarkus.properties
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           quarkus.log.syslog.enable=true
           quarkus.log.syslog.endpoint={{quarkus_endpoint}}
@@ -501,7 +501,7 @@
 # TODO: Where does profile.properties go?
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | AUDIT | Keycloak must be configured to disable non-essential modules."
   blockinfile:
-    path: /opt/keycloak/conf/profile.properties
+    path: "{{keycloak_home}}/conf/profile.properties"
     block: |
       {{profile_properties_features}}
     state: present
@@ -546,88 +546,88 @@
 #    - xccdf_hdf_group_KEYC-01-000024
 #    - patch
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | AUDIT | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
-#  block:
-#    - name: get current flows
-#      shell: >
-#        {{path}}kcadm.sh get authentication/flows
-#      register: initial_flows
-#      ignore_errors: no
-#
-#    - name: set initial flows' authenticators in json
-#      set_fact:
-#        initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
-#
-#    - name: set initial flows' authenticator to array
-#      set_fact:
-#        initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
-#
-#    # The following is executed on the condition that ... was not found
-#    - block:
-#        - name: set initial flows' ids in json
-#          set_fact:
-#            initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
-#
-#        - name: set initial flows' ids to array
-#          set_fact:
-#            initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
-#
-#        - debug:
-#            msg: "{{initial_ids}}"
-#
-#        - name: create a copy of browser authentication flow
-#          shell: |
-#            {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-#            {{path}}kcadm.sh get authentication/flows
-#          register: new_flows
-#          check_mode: no
-#          changed_when: no
-#          ignore_errors: no
-#
-#        - name: set new flows in json
-#          set_fact:
-#            new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
-#
-#        - name: set variable for new flow id
-#          set_fact:
-#            new_id: "{{ new_ids | difference(initial_ids) | list }}"
-#
-#        - name: update new flow's alias
-#          shell: |
-#            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"otp_alias\"
-#          ignore_errors: no
-#
-#        - name: update new flow's execution
-#          shell: |
-#            {{path}}kcadm.sh create authentication/flows/otp_alias/executions/execution -s \"provider\"=\"auth-otp-form\"
-#          register: success
-#          ignore_errors: no
-#
-#        - name: get new flows execution
-#          shell: |
-#            {{path}}kcadm.sh get authentication/flows/otp_alias/executions
-#          register: custom_flow
-#          ignore_errors: no
-#
-#        - name: set new flow in json
-#          set_fact:
-#            custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
-#
-#        - name: get x509 execution id
-#          set_fact:
-#            x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-otp-form`].id') }}"
-#
-#        - name: create config
-#          shell: |
-#            {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
-#          register: custom_flow
-#          ignore_errors: no
-#      when: '"auth-otp-form" not in initial_authenticators'
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000026
-#    - audit
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | AUDIT | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
+  block:
+    - name: get current flows
+      shell: >
+        {{path}}kcadm.sh get authentication/flows
+      register: initial_flows
+      ignore_errors: no
+
+    - name: set initial flows' authenticators in json
+      set_fact:
+        initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
+
+    - name: set initial flows' authenticator to array
+      set_fact:
+        initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
+
+    # The following is executed on the condition that auth-otp-form was not found
+    - block:
+        - name: set initial flows' ids in json
+          set_fact:
+            initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
+
+        - name: set initial flows' ids to array
+          set_fact:
+            initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
+
+        - debug:
+            msg: "{{initial_ids}}"
+
+        - name: create a copy of browser authentication flow
+          shell: |
+            {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
+            {{path}}kcadm.sh get authentication/flows
+          register: new_flows
+          check_mode: no
+          changed_when: no
+          ignore_errors: no
+
+        - name: set new flows in json
+          set_fact:
+            new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
+
+        - name: set variable for new flow id
+          set_fact:
+            new_id: "{{ new_ids | difference(initial_ids) | list }}"
+
+        - name: update new flow's alias
+          shell: |
+            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"otp_alias\"
+          ignore_errors: no
+
+        - name: update new flow's execution
+          shell: |
+            {{path}}kcadm.sh create authentication/flows/otp_alias/executions/execution -s \"provider\"=\"auth-otp-form\"
+          register: success
+          ignore_errors: no
+
+        - name: get new flows execution
+          shell: |
+            {{path}}kcadm.sh get authentication/flows/otp_alias/executions
+          register: custom_flow
+          ignore_errors: no
+
+        - name: set new flow in json
+          set_fact:
+            custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
+
+        - name: get x509 execution id
+          set_fact:
+            x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-otp-form`].id') }}"
+
+        - name: create config
+          shell: |
+            {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
+          register: custom_flow
+          ignore_errors: no
+      when: '"auth-otp-form" not in initial_authenticators'
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000026
+    - audit
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | PATCH | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
 #  shell: 
@@ -682,18 +682,18 @@
 
         - name: update new flow's alias
           shell: |
-            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"x509_alias\"
+            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"browser\"
           ignore_errors: no
 
         - name: update new flow's execution
           shell: |
-            {{path}}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
+            {{path}}kcadm.sh create authentication/flows/browser/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
           register: success
           ignore_errors: no
 
         - name: get new flows execution
           shell: |
-            {{path}}kcadm.sh get authentication/flows/x509_alias/executions
+            {{path}}kcadm.sh get authentication/flows/browser/executions
           register: custom_flow
           ignore_errors: no
 
@@ -986,7 +986,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
   tags:
     - cat2
     - medium
@@ -1014,7 +1014,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
   tags:
     - cat2
     - medium
@@ -1042,7 +1042,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
   tags:
     - cat2
     - medium
@@ -1070,7 +1070,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
   tags:
     - cat2
     - medium
@@ -1120,7 +1120,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: /opt/keycloak/providers/password-min-time-policy-0.0.1.jar
+        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
   tags:
     - cat2
     - medium
@@ -1170,7 +1170,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -1184,7 +1184,7 @@
 
     - name: Set quarkus syslog in quarkus.properties
       blockinfile:
-        path: /opt/keycloak/conf/quarkus.properties
+        path: "{{keycloak_home}}/conf/quarkus.properties"
         block: |
           quarkus.log.syslog.enable=true
           quarkus.log.syslog.endpoint={{quarkus_endpoint}}
@@ -1224,7 +1224,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -1238,7 +1238,7 @@
 
     - name: Set quarkus syslog in quarkus.properties
       blockinfile:
-        path: /opt/keycloak/conf/quarkus.properties
+        path: "{{keycloak_home}}/conf/quarkus.properties"
         block: |
           quarkus.log.syslog.enable=true
           quarkus.log.syslog.endpoint={{quarkus_endpoint}}
@@ -1279,7 +1279,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -1293,7 +1293,7 @@
 
     - name: Set log console format in keycloak.conf
       lineinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         regexp: '^log-console-format'
         line: log-console-format={{log_console_format}}
         state: present

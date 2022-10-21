@@ -1,6 +1,8 @@
 - name: Set Up
-  shell: /opt/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin
-  register: signin
+  block:
+    - name: Sign in as admin
+      shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin"
+      register: signin
 
 - name: pull jar
   block:
@@ -18,3 +20,33 @@
         - github_pat:
   tags:
     - xccdf_hdf_group_KEYC-01-000047
+
+- name: Set up TrustStore
+  block:
+    - name: Obtain Certificate
+      ansible.builtin.get_url:
+        url: "{{dod_certificate_url}}"
+        dest: "{{keycloak_home}}/cert.zip"
+
+    - name: Un-compress Certificate Archive
+      ansible.builtin.unarchive:
+        src: "{{keycloak_home}}/cert.zip"
+        dest: "{{keycloak_home}}"
+        remote_src: yes
+
+    - name: Prepare Certificate
+      shell: >
+        openssl pkcs7 -in {{keycloak_home}}/Certificates_PKCS7_*/*.pem.p7b -print_certs -out {{keycloak_home}}/DoD_CAs.pem
+
+    - name: Obtain Certificate
+      java_cert:
+        cert_path: "{{keycloak_home}}/DoD_CAs.pem"
+        keystore_path: "{{spi_trust_store_file_path}}"
+        keystore_pass: changeit
+        keystore_create: true
+        state: present
+        cert_alias: DoD_CAs
+        trust_cacert: true
+#    - name:
+  tags:
+    - testTrustStore

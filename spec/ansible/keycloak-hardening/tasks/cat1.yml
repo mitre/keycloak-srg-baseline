@@ -3,7 +3,7 @@
   block:
     - name: Set protocols in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           hostname-strict-https=true
           https-client-auth=required
@@ -15,12 +15,37 @@
       changed_when: no
       ignore_errors: yes
 
+#    - name: Unbundle the pkcs7 file into a root CA cert chain
+
+#    - name: Prepare truststore
+#      shell: |
+#        {{path}}kcadm.sh start --https-trust-store-file={{https_truststore_file_path}}
+#        {{path}}kcadm.sh start --https-trust-store-password=admin{{https_truststore_password}}
+#        {{path}}kcadm.sh start --spi-truststore-file-file={{spi_trust_store_file_path}}
+#        {{path}}kcadm.sh start --spi-truststore-file-password=admin --spi-truststore-file-hostname-verification-policy=ANY
+#      register: result
+#      check_mode: no
+#      changed_when: no
+#      ignore_errors: yes
+
+#    - name: Set password in trust
+#      lineinfile:
+#        path: "{{https_truststore_file_path}}"
+#        regexp: '^password'
+#        line: password=admin
+#        state: present
+#        create: yes
+#      register: result
+#      check_mode: no
+#      changed_when: no
+#      ignore_errors: yes
+
     - name: Set HTTPS TrustStore in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           https-trust-store-file={{https_truststore_file_path}}
-          https-trust-store-password=
+          https-trust-store-password={{https_truststore_password}}
           {{security_option}}
         state: present
         create: yes
@@ -55,7 +80,7 @@
 
     - name: Set cache in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           cache=ispn
           cache-stack=tcp
@@ -136,7 +161,7 @@
   block:
     - name: Set protocols in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           hostname-strict-https=true
           https-client-auth=required
@@ -150,10 +175,10 @@
 
     - name: Set spi trust store in keycloak.conf
       blockinfile:
-        path: /opt/keycloak/conf/keycloak.conf
+        path: "{{keycloak_home}}/conf/keycloak.conf"
         block: |
           spi-truststore-file-file={{spi_trust_store_file_path}}
-          spi-truststore-file-password=
+          spi-truststore-file-password={{spi_trust_store_password}}
           spi-truststore-file-hostname-verification-policy={{spi_trust_store_policy}}
         state: present
         create: yes
