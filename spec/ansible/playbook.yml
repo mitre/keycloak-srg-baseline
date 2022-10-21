@@ -1,10 +1,10 @@
 ---
-- hosts: keycloak
+- hosts: "{{container_name}}"
 #  connection: local
 #  become: yes
   user: root
-#  vars:
-#    is_container: false
+  vars:
+    is_container: true
   roles:
     - role: "./keycloak-hardening"
 #      rhel7stig_system_is_container: "{{ is_container | default(false) }}"

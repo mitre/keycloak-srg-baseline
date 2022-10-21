@@ -3,7 +3,7 @@
     - name: Stop
       delegate_to: localhost
       shell: >
-        docker stop keycloak
+        docker stop {{container_name}}
 
     - name: Pause
       delegate_to: localhost
@@ -13,7 +13,7 @@
     - name: Start
       delegate_to: localhost
       shell: >
-        docker start keycloak
+        docker start {{container_name}}
   tags:
     - xccdf_hdf_group_KEYC-01-000047
     - xccdf_hdf_group_KEYC-01-000048

@@ -1,69 +1,43 @@
 # TODO: consider options for multiple realms
+is_container: true
+container_name: keycloak_test
+target_python_path: "{{ansible_facts['discovered_interpreter_python']}}"  #/usr/libexec/platform-python3.6
+package_dependencies:
+  - unzip
+  - openssl
 keycloak_realm: master
-
 user_name: admin
-
 keycloak_home: /opt/keycloak
-
 role_policy_name: policy
-
 role_policy_description: policy description
-
 path: /opt/keycloak/bin/
-
 failure_factor: 3
-
 max_delta_time_seconds: 900
-
 quarkus_endpoint: example.syslog.endpoint:514
-
 quarkus_protocol: UDP
-
 quarkus_format: UTC
-
 log_console_format: '%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] (%t) %s%e%n'
-
 action_mail_account: administrator@mail.com
-
-https_truststore_file_path: /opt/keycloak/.keycloak/truststore.jks
-
+https_truststore_file_path: /opt/keycloak/truststore.jks
 https_truststore_password: password
-
-spi_trust_store_file_path: /opt/keycloak/.keycloak/spi_truststore.jks
-
+spi_trust_store_file_path: /opt/keycloak/truststore.jks
 spi_trust_store_policy: ANY
-
 spi_trust_store_password: password
-
 authentication_flow_id:
-
 jarfile_url: https://maven.pkg.github.com/mitre/keycloak-custom-policies/org/keycloak/policy/password-min-time-policy/0.0.1-SNAPSHOT/password-min-time-policy-0.0.1-20220902.182228-2.jar
-
 flow_alias: example alias
-
 dod_certificate_url: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip
-
 https_certificate_files: cert.crt
-
 https_certificate_files_path: /opt/keycloak/conf/cert.crt
-
 https_certificate_key_files: cert.pem
-
 https_certificate_key_files_path: /opt/keycloak/conf/cert.pem
-
 generate_certificates: true
-
 certificate_common_name: keycloak.example.com
-
 certificate_organization_name: U.S. Government
-
 #certificate_subject_alt_names:
 #  -
-
 certificate_country_name: US
-
 certificate_organizational_unit: DoD
-
 # If connecting to directory services or other identity provider,
 # choose one of the two following configurations for protocol security
 #security_option: |
@@ -73,7 +47,6 @@ certificate_organizational_unit: DoD
 security_option: |
   https-certificate-file={{https_certificate_files_path}}
   https-certificate-key-file={{https_certificate_key_files_path}}
-
 profile_properties_features: |
   feature.account2=disabled
   feature.account_api=disabled
@@ -93,7 +66,6 @@ profile_properties_features: |
   feature.upload_scripts=disabled
   feature.web_authn=disabled
   feature.update_email=disabled
-
 #enabled_event_types:
 #  - "SEND_RESET_PASSWORD"
 #  - "UPDATE_CONSENT_ERROR"
@@ -174,9 +146,6 @@ profile_properties_features: |
 #  - "VERIFY_PROFILE"
 #  - "GRANT_CONSENT_ERROR"
 #  - "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR"
-
-
-
 enabled_event_types_string: >
   [ "SEND_RESET_PASSWORD",
   "UPDATE_CONSENT_ERROR",
@@ -257,6 +226,5 @@ enabled_event_types_string: >
   "VERIFY_PROFILE",
   "GRANT_CONSENT_ERROR",
   "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR" ]
-
 events_listeners_string: >
   [ "jboss-logging" ]

@@ -1,7 +1,7 @@
 - name: Set Up
   block:
     - name: Sign in as admin
-      shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin"
+      shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password foobar"
       register: signin
 
 - name: pull jar
@@ -21,35 +21,39 @@
   tags:
     - xccdf_hdf_group_KEYC-01-000047
 
-
+# - name: Upgrade pip
+#   command: "{{ target_python_path }} -m pip install --upgrade pip"
 - name: Upgrade pip
   ansible.builtin.pip:
     name: pip
     state: present
     extra_args: --upgrade
+    executable: /usr/local/bin/pip
   tags: test
+  vars:
+    ansible_python_interpreter: /usr/libexec/platform-python3.6
 
 - name: Install pip dependencies
   ansible.builtin.pip:
     name:
-#      - python3-dnf
       - setuptools
       - virtualenv
       - cryptography
     state: present
   tags: test
 
-#- name: Install ntpdate
-#  ansible.builtin.package:
-#    name:
-#      - update
-#      - unzip
-#    state: present
-#  tags: test
+- name: Install package dependencies
+  ansible.builtin.package:
+   name: "{{ package_dependencies }}"
+   state: present
+  tags: test
+  when: not is_container
 
+# the packages module does not work with microdnf, so use command
+- name: Install package dependencies (microdnf)
+  command: microdnf install {{ package_dependencies | join(" ") }}
 
-
-- name: HTTPS Certificate Configuration
+- name: Copy Over HTTPS Certificate
   block:
     - name: Copy SSL Certificate
       copy:
@@ -65,7 +69,7 @@
 
 - name: Generate a Self Signed OpenSSL certificate
   block:
-    - debug: msg="Warning, Ansible is creating a self-signed certificate for Keycloak, this should not be done in production"
+    - debug: msg="WARNING! Ansible is creating a self-signed certificate for Keycloak. This should not be done in production."
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
         path: "{{https_certificate_key_files_path}}"
@@ -87,6 +91,16 @@
         provider: selfsigned
   when: generate_certificates
   tags: test
+
+- name: Set perms on cert files
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0640'
+  loop: 
+    - "{{ https_certificate_files_path }}"
+    - "{{ https_certificate_key_files_path }}"
 
 - name: Set up TrustStore
   block:

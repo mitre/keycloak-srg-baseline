@@ -206,7 +206,7 @@
       changed_when: no
       ignore_errors: yes
 
-    - name: Set log console formant in keycloak.conf
+    - name: Set log console format in keycloak.conf
       lineinfile:
         path: "{{keycloak_home}}/conf/keycloak.conf"
         regexp: '^log-console-format'
