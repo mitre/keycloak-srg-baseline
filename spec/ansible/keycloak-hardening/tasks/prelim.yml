@@ -1,8 +1,12 @@
 - name: Set Up
   block:
     - name: Sign in as admin
-      shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password foobar"
+      shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin"
       register: signin
+
+#    - name: Print all available facts
+#      ansible.builtin.debug:
+#        var: ansible_facts
 
 - name: pull jar
   block:
@@ -21,17 +25,21 @@
   tags:
     - xccdf_hdf_group_KEYC-01-000047
 
-# - name: Upgrade pip
-#   command: "{{ target_python_path }} -m pip install --upgrade pip"
+#- name: Upgrade pip
+#  command: "{{ target_python_path }} -m pip install --upgrade pip"
 - name: Upgrade pip
-  ansible.builtin.pip:
+  package:
+    use: pip
     name: pip
-    state: present
-    extra_args: --upgrade
-    executable: /usr/local/bin/pip
+    state: latest
+#  ansible.builtin.pip:
+#    name: pip
+#    state: present
+#    extra_args: --upgrade
+#    executable: /usr/local/bin/pip
   tags: test
-  vars:
-    ansible_python_interpreter: /usr/libexec/platform-python3.6
+#  vars:
+#    ansible_python_interpreter: /usr/libexec/platform-python3.6
 
 - name: Install pip dependencies
   ansible.builtin.pip:
