@@ -346,20 +346,20 @@
       changed_when: no
       ignore_errors: yes
 
-    - name: Set quarkus syslog in quarkus.properties
-      blockinfile:
-        path: "{{keycloak_home}}/conf/quarkus.properties"
-        block: |
-          quarkus.log.syslog.enable=true
-          quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-          quarkus.log.syslog.protocol={{quarkus_protocol}}
-        state: present
-        create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-      register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+    # - name: Set quarkus syslog in quarkus.properties
+    #   blockinfile:
+    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     block: |
+    #       quarkus.log.syslog.enable=true
+    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #     state: present
+    #     create: yes
+    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+    #   register: result
+    #   check_mode: no
+    #   changed_when: no
+    #   ignore_errors: yes
 
     - name: Set action mail account in auditd.conf
       lineinfile:
@@ -412,20 +412,20 @@
       changed_when: no
       ignore_errors: yes
 
-    - name: Set quarkus syslog in quarkus.properties
-      blockinfile:
-        path: "{{keycloak_home}}/conf/quarkus.properties"
-        block: |
-          quarkus.log.syslog.enable=true
-          quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-          quarkus.log.syslog.protocol={{quarkus_protocol}}
-        state: present
-        create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-      register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+    # - name: Set quarkus syslog in quarkus.properties
+    #   blockinfile:
+    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     block: |
+    #       quarkus.log.syslog.enable=true
+    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #     state: present
+    #     create: yes
+    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+    #   register: result
+    #   check_mode: no
+    #   changed_when: no
+    #   ignore_errors: yes
   tags:
     - cat2
     - medium
@@ -468,20 +468,20 @@
       changed_when: no
       ignore_errors: yes
 
-    - name: Set quarkus syslog in quarkus.properties
-      blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
-        block: |
-          quarkus.log.syslog.enable=true
-          quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-          quarkus.log.syslog.protocol={{quarkus_protocol}}
-        state: present
-        create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-      register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+    # - name: Set quarkus syslog in quarkus.properties
+    #   blockinfile:
+    #     path: "{{keycloak_home}}/conf/keycloak.conf"
+    #     block: |
+    #       quarkus.log.syslog.enable=true
+    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #     state: present
+    #     create: yes
+    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+    #   register: result
+    #   check_mode: no
+    #   changed_when: no
+    #   ignore_errors: yes
   tags:
     - cat2
     - medium
@@ -1182,20 +1182,20 @@
       changed_when: no
       ignore_errors: yes
 
-    - name: Set quarkus syslog in quarkus.properties
-      blockinfile:
-        path: "{{keycloak_home}}/conf/quarkus.properties"
-        block: |
-          quarkus.log.syslog.enable=true
-          quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-          quarkus.log.syslog.protocol={{quarkus_protocol}}
-        state: present
-        create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-      register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+    # - name: Set quarkus syslog in quarkus.properties
+    #   blockinfile:
+    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     block: |
+    #       quarkus.log.syslog.enable=true
+    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #     state: present
+    #     create: yes
+    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+    #   register: result
+    #   check_mode: no
+    #   changed_when: no
+    #   ignore_errors: yes
   tags:
     - cat2
     - medium
@@ -1236,21 +1236,21 @@
       changed_when: no
       ignore_errors: yes
 
-    - name: Set quarkus syslog in quarkus.properties
-      blockinfile:
-        path: "{{keycloak_home}}/conf/quarkus.properties"
-        block: |
-          quarkus.log.syslog.enable=true
-          quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-          quarkus.log.syslog.protocol={{quarkus_protocol}}
-          quarkus.log.syslog.format={{quarkus_format}}
-        state: present
-        create: yes
-        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-      register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+    # - name: Set quarkus syslog in quarkus.properties
+    #   blockinfile:
+    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     block: |
+    #       quarkus.log.syslog.enable=true
+    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
+    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #       quarkus.log.syslog.format={{quarkus_format}}
+    #     state: present
+    #     create: yes
+    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+    #   register: result
+    #   check_mode: no
+    #   changed_when: no
+    #   ignore_errors: yes
   tags:
     - cat2
     - medium

@@ -21,17 +21,17 @@
   tags:
     - xccdf_hdf_group_KEYC-01-000047
 
-# - name: Upgrade pip
-#   command: "{{ target_python_path }} -m pip install --upgrade pip"
 - name: Upgrade pip
-  ansible.builtin.pip:
-    name: pip
-    state: present
-    extra_args: --upgrade
-    executable: /usr/local/bin/pip
-  tags: test
-  vars:
-    ansible_python_interpreter: /usr/libexec/platform-python3.6
+  command: "{{ target_python_path }} -m pip install --upgrade pip"
+# - name: Upgrade pip
+#   ansible.builtin.pip:
+#     name: pip
+#     state: present
+#     extra_args: --upgrade
+#     executable: /usr/local/bin/pip
+#   tags: test
+#   vars:
+#     ansible_python_interpreter: /usr/libexec/platform-python3.6
 
 - name: Install pip dependencies
   ansible.builtin.pip:
@@ -72,15 +72,15 @@
     - debug: msg="WARNING! Ansible is creating a self-signed certificate for Keycloak. This should not be done in production."
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
-        path: "{{https_certificate_key_files_path}}"
+        path: "{{ https_certificate_key_files_path }}"
     - name: Create certificate signing request (CSR) for self-signed certificate
       community.crypto.openssl_csr_pipe:
-        privatekey_path: "{{https_certificate_key_files_path}}"
-        common_name: "{{certificate_common_name}}"
-        organization_name: "{{certificate_organization_name}}"
+        privatekey_path: "{{ https_certificate_key_files_path }}"
+        common_name: "{{ certificate_common_name }}"
+        organization_name: "{{ certificate_organization_name }}"
 #        subject_alt_name: "{{certificate_subject_alt_names}}"
-        country_name: "{{certificate_country_name}}"
-        organizational_unit_name: "{{certificate_organizational_unit}}"
+        country_name: "{{ certificate_country_name }}"
+        organizational_unit_name: "{{ certificate_organizational_unit }}"
       register: csr
 
     - name: Create self-signed certificate from CSR
