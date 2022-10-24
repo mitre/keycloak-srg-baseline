@@ -22,7 +22,7 @@
     - name: Update enabled_event_types_list
       set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
-  when: xccdf_hdf_group_KEYC-01-000005
+  when: xccdf_hdf_group_KEYC_01_000005
   tags:
     - cat2
     - medium
@@ -51,7 +51,7 @@
     - name: Update enabled_event_types_list
       set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | unique }}"
-  when: xccdf_hdf_group_KEYC-01-000006
+  when: xccdf_hdf_group_KEYC_01_000006
   tags:
     - cat2
     - medium
@@ -60,7 +60,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | PATCH | Keycloak must be configured to automatically audit account modification."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000006
+#  when: xccdf_hdf_group_KEYC_01_000006
 #  tags:
 #    - cat2
 #    - medium
@@ -75,7 +75,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000007
+  when: xccdf_hdf_group_KEYC_01_000007
   tags:
     - cat2
     - medium
@@ -84,7 +84,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | PATCH | Keycloak must be configured to automatically audit account disabling actions."
 #  shell:
-#  when: xccdf_hdf_group_KEYC-01-000007
+#  when: xccdf_hdf_group_KEYC_01_000007
 #  tags:
 #    - cat2
 #    - medium
@@ -105,7 +105,7 @@
     - name: Update enabled_event_types_list
       set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | unique }}"
-  when: xccdf_hdf_group_KEYC-01-000008
+  when: xccdf_hdf_group_KEYC_01_000008
   tags:
     - cat2
     - medium
@@ -114,7 +114,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | PATCH | Keycloak must be configured to automatically audit account removal actions."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000008
+#  when: xccdf_hdf_group_KEYC_01_000008
 #  tags:
 #    - cat2
 #    - medium
@@ -130,7 +130,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000009
+  when: xccdf_hdf_group_KEYC_01_000009
   tags:
     - cat2
     - medium
@@ -139,7 +139,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000009 | PATCH | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000009
+#  when: xccdf_hdf_group_KEYC_01_000009
 #  tags:
 #    - cat2
 #    - medium
@@ -154,7 +154,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000010
+  when: xccdf_hdf_group_KEYC_01_000010
   tags:
     - cat2
     - medium
@@ -165,7 +165,7 @@
 #- name: xccdf_hdf_group_KEYC-01-000010 | Update enabled_event_types list
 #  set_fact:
 #        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) |unique }}"
-#  when: xccdf_hdf_group_KEYC-01-000010
+#  when: xccdf_hdf_group_KEYC_01_000010
 #  tags:
 #    - cat2
 #    - medium
@@ -174,7 +174,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | PATCH | Keycloak must be configured to audit each authentication and authorization transaction."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000010
+#  when: xccdf_hdf_group_KEYC_01_000010
 #  tags:
 #    - cat2
 #    - medium
@@ -191,7 +191,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000011
+  when: xccdf_hdf_group_KEYC_01_000011
   tags:
     - cat2
     - medium
@@ -200,7 +200,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | PATCH | Keycloak configuration audit records must identify what type of events occurred."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000011
+#  when: xccdf_hdf_group_KEYC_01_000011
 #  tags:
 #    - cat2
 #    - medium
@@ -231,7 +231,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000012
+  when: xccdf_hdf_group_KEYC_01_000012
   tags:
     - cat2
     - medium
@@ -240,7 +240,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012 | PATCH | Keycloak configuration audit records must identify when (date and time) the events occurred."
 #  shell:
-#  when: xccdf_hdf_group_KEYC-01-000012
+#  when: xccdf_hdf_group_KEYC_01_000012
 #  tags:
 #    - cat2
 #    - medium
@@ -255,7 +255,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000013
+  when: xccdf_hdf_group_KEYC_01_000013
   tags:
     - cat2
     - medium
@@ -264,7 +264,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | PATCH | Keycloak configuration audit records must identify where the events occurred."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000013
+#  when: xccdf_hdf_group_KEYC_01_000013
 #  tags:
 #    - cat2
 #    - medium
@@ -287,7 +287,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | PATCH | Keycloak configuration audit records must identify the source of the events."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000014
+#  when: xccdf_hdf_group_KEYC_01_000014
 #  tags:
 #    - cat2
 #    - medium
@@ -304,7 +304,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000015
+  when: xccdf_hdf_group_KEYC_01_000015
   tags:
     - cat2
     - medium
@@ -313,7 +313,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | PATCH | Keycloak configuration audit records must identify the outcome of the events."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000015
+#  when: xccdf_hdf_group_KEYC_01_000015
 #  tags:
 #    - cat2
 #    - medium
@@ -327,7 +327,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000016
+  when: xccdf_hdf_group_KEYC_01_000016
   tags:
     - cat2
     - medium
@@ -394,7 +394,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000017
+  when: xccdf_hdf_group_KEYC_01_000017
   tags:
     - cat2
     - medium
@@ -449,7 +449,7 @@
     #   check_mode: no
     #   changed_when: no
     #   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000018
+  when: xccdf_hdf_group_KEYC_01_000018
   tags:
     - cat2
     - medium
@@ -506,7 +506,7 @@
     #   check_mode: no
     #   changed_when: no
     #   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000019
+  when: xccdf_hdf_group_KEYC_01_000019
   tags:
     - cat2
     - medium
@@ -536,7 +536,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000021
+  when: xccdf_hdf_group_KEYC_01_000021
   tags:
     - cat2
     - medium
@@ -545,7 +545,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | PATCH | Keycloak must be configured to disable non-essential modules."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000021
+#  when: xccdf_hdf_group_KEYC_01_000021
 #  tags:
 #    - cat2
 #    - medium
@@ -559,7 +559,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000024
+#  when: xccdf_hdf_group_KEYC_01_000024
 #  tags:
 #    - cat2
 #    - medium
@@ -568,7 +568,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | PATCH | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000024
+#  when: xccdf_hdf_group_KEYC_01_000024
 #  tags:
 #    - cat2
 #    - medium
@@ -652,7 +652,7 @@
           register: custom_flow
           ignore_errors: no
       when: '"auth-otp-form" not in initial_authenticators'
-  when: xccdf_hdf_group_KEYC-01-000026
+  when: xccdf_hdf_group_KEYC_01_000026
   tags:
     - cat2
     - medium
@@ -661,7 +661,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | PATCH | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000026
+#  when: xccdf_hdf_group_KEYC_01_000026
 #  tags:
 #    - cat2
 #    - medium
@@ -742,7 +742,7 @@
           register: custom_flow
           ignore_errors: no
       when: '"auth-x509-client-username-form" not in initial_authenticators'
-  when: xccdf_hdf_group_KEYC-01-000027
+  when: xccdf_hdf_group_KEYC_01_000027
   tags:
     - cat2
     - medium
@@ -751,7 +751,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000027 | PATCH | Keycloak must be configured to require multifactor authentication using Common Access Card (CAC) Personal Identity Verification (PIV) credentials for authenticating non-privileged user accounts."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000027
+#  when: xccdf_hdf_group_KEYC_01_000027
 #  tags:
 #    - cat2
 #    - medium
@@ -764,7 +764,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000029
+#  when: xccdf_hdf_group_KEYC_01_000029
 #  tags:
 #    - cat2
 #    - medium
@@ -773,7 +773,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | PATCH | Keycloak must be configured to enforce a minimum 15-character password length."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000029
+#  when: xccdf_hdf_group_KEYC_01_000029
 #  tags:
 #    - cat2
 #    - medium
@@ -786,7 +786,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000030
+#  when: xccdf_hdf_group_KEYC_01_000030
 #  tags:
 #    - cat2
 #    - medium
@@ -795,7 +795,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | PATCH | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000030
+#  when: xccdf_hdf_group_KEYC_01_000030
 #  tags:
 #    - cat2
 #    - medium
@@ -808,7 +808,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000031
+#  when: xccdf_hdf_group_KEYC_01_000031
 #  tags:
 #    - cat2
 #    - medium
@@ -817,7 +817,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000031
+#  when: xccdf_hdf_group_KEYC_01_000031
 #  tags:
 #    - cat2
 #    - medium
@@ -830,7 +830,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000032
+#  when: xccdf_hdf_group_KEYC_01_000032
 #  tags:
 #    - cat2
 #    - medium
@@ -839,7 +839,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000032 
+#  when: xccdf_hdf_group_KEYC_01_000032 
 #  tags:
 #    - cat2
 #    - medium
@@ -852,7 +852,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000033
+#  when: xccdf_hdf_group_KEYC_01_000033
 #  tags:
 #    - cat2
 #    - medium
@@ -861,7 +861,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000033
+#  when: xccdf_hdf_group_KEYC_01_000033
 #  tags:
 #    - cat2
 #    - medium
@@ -874,7 +874,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000034
+#  when: xccdf_hdf_group_KEYC_01_000034
 #  tags:
 #    - cat2
 #    - medium
@@ -883,7 +883,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000034
+#  when: xccdf_hdf_group_KEYC_01_000034
 #  tags:
 #    - cat2
 #    - medium
@@ -896,7 +896,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000038
+#  when: xccdf_hdf_group_KEYC_01_000038
 #  tags:
 #    - cat2
 #    - medium
@@ -905,7 +905,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | PATCH | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000038
+#  when: xccdf_hdf_group_KEYC_01_000038
 #  tags:
 #    - cat2
 #    - medium
@@ -918,7 +918,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000039
+#  when: xccdf_hdf_group_KEYC_01_000039
 #  tags:
 #    - cat2
 #    - medium
@@ -927,7 +927,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | PATCH | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000039
+#  when: xccdf_hdf_group_KEYC_01_000039
 #  tags:
 #    - cat2
 #    - medium
@@ -1008,7 +1008,7 @@
           register: custom_flow
           ignore_errors: no
       when: '"auth-x509-client-username-form" not in initial_authenticators'
-  when: xccdf_hdf_group_KEYC-01-000043
+  when: xccdf_hdf_group_KEYC_01_000043
   tags:
     - cat2
     - medium
@@ -1037,7 +1037,7 @@
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
         dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
-  when: xccdf_hdf_group_KEYC-01-000047
+  when: xccdf_hdf_group_KEYC_01_000047
   tags:
     - cat2
     - medium
@@ -1046,7 +1046,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000047
+#  when: xccdf_hdf_group_KEYC_01_000047
 #  tags:
 #    - cat2
 #    - medium
@@ -1067,7 +1067,7 @@
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
         dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
-  when: xccdf_hdf_group_KEYC-01-000048
+  when: xccdf_hdf_group_KEYC_01_000048
   tags:
     - cat2
     - medium
@@ -1076,7 +1076,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000048
+#  when: xccdf_hdf_group_KEYC_01_000048
 #  tags:
 #    - cat2
 #    - medium
@@ -1097,7 +1097,7 @@
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
         dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
-  when: xccdf_hdf_group_KEYC-01-000049
+  when: xccdf_hdf_group_KEYC_01_000049
   tags:
     - cat2
     - medium
@@ -1106,7 +1106,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049 | PATCH | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000049
+#  when: xccdf_hdf_group_KEYC_01_000049
 #  tags:
 #    - cat2
 #    - medium
@@ -1127,7 +1127,7 @@
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
         dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
-  when: xccdf_hdf_group_KEYC-01-000050
+  when: xccdf_hdf_group_KEYC_01_000050
   tags:
     - cat2
     - medium
@@ -1136,7 +1136,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050 | PATCH | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000050
+#  when: xccdf_hdf_group_KEYC_01_000050
 #  tags:
 #    - cat2
 #    - medium
@@ -1151,7 +1151,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000051
+  when: xccdf_hdf_group_KEYC_01_000051
   tags:
     - cat2
     - medium
@@ -1160,7 +1160,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | PATCH | Keycloak must be configured to automatically audit account enabling actions."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000051
+#  when: xccdf_hdf_group_KEYC_01_000051
 #  tags:
 #    - cat2
 #    - medium
@@ -1181,7 +1181,7 @@
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
         dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
-  when: xccdf_hdf_group_KEYC-01-000052
+  when: xccdf_hdf_group_KEYC_01_000052
   tags:
     - cat2
     - medium
@@ -1190,7 +1190,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | PATCH | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000052
+#  when: xccdf_hdf_group_KEYC_01_000052
 #  tags:
 #    - cat2
 #    - medium
@@ -1205,7 +1205,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000054
+  when: xccdf_hdf_group_KEYC_01_000054
   tags:
     - cat2
     - medium
@@ -1214,7 +1214,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | PATCH | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000054
+#  when: xccdf_hdf_group_KEYC_01_000054
 #  tags:
 #    - cat2
 #    - medium
@@ -1260,7 +1260,7 @@
     #   check_mode: no
     #   changed_when: no
     #   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000055
+  when: xccdf_hdf_group_KEYC_01_000055
   tags:
     - cat2
     - medium
@@ -1269,7 +1269,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055 | PATCH | Keycloak must be configured to send audit records to a centralized audit server."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000055
+#  when: xccdf_hdf_group_KEYC_01_000055
 #  tags:
 #    - cat2
 #    - medium
@@ -1317,7 +1317,7 @@
     #   check_mode: no
     #   changed_when: no
     #   ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000056
+  when: xccdf_hdf_group_KEYC_01_000056
   tags:
     - cat2
     - medium
@@ -1326,7 +1326,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056 | PATCH | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000056
+#  when: xccdf_hdf_group_KEYC_01_000056
 #  tags:
 #    - cat2
 #    - medium
@@ -1370,7 +1370,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000057
+  when: xccdf_hdf_group_KEYC_01_000057
   tags:
     - cat2
     - medium
@@ -1379,7 +1379,7 @@
 
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057 | PATCH | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000057
+#  when: xccdf_hdf_group_KEYC_01_000057
 #  tags:  
 #    - cat2
 #    - medium
@@ -1392,7 +1392,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000059
+#  when: xccdf_hdf_group_KEYC_01_000059
 #  tags:
 #    - cat2
 #    - medium
@@ -1401,7 +1401,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | PATCH | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000059
+#  when: xccdf_hdf_group_KEYC_01_000059
 #  tags:
 #    - cat2
 #    - medium
@@ -1414,7 +1414,7 @@
 #  check_mode: no
 #  changed_when: no
 #  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC-01-000064
+#  when: xccdf_hdf_group_KEYC_01_000064
 #  tags:
 #    - cat2
 #    - medium
@@ -1423,7 +1423,7 @@
 #
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | PATCH | AAA Services must not be configured with shared accounts."
 #  shell: 
-#  when: xccdf_hdf_group_KEYC-01-000064
+#  when: xccdf_hdf_group_KEYC_01_000064
 #  tags:
 #    - cat2
 #    - medium

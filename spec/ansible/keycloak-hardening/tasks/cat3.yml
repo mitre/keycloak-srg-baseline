@@ -16,7 +16,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
-  when: xccdf_hdf_group_KEYC-01-000053
+  when: xccdf_hdf_group_KEYC_01_000053
   tags:
     - cat3
     - low
@@ -25,7 +25,7 @@
 
 #- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | PATCH | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
 #  shell:
-#  when: xccdf_hdf_group_KEYC-01-000053
+#  when: xccdf_hdf_group_KEYC_01_000053
 #  tags:
 #    - cat3
 #    - low
