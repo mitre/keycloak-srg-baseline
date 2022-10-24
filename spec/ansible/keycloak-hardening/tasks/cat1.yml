@@ -30,6 +30,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
+  when: xccdf_hdf_group_KEYC-01-000022
   tags:
     - cat1
     - high
@@ -67,6 +68,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
+  when: xccdf_hdf_group_KEYC-01-000023
   tags:
     - cat1
     - high
@@ -98,6 +100,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
+  when: xccdf_hdf_group_KEYC-01-000025
   tags:
     - cat1
     - high
@@ -119,6 +122,7 @@
   check_mode: no
   changed_when: no
   ignore_errors: yes
+  when: xccdf_hdf_group_KEYC-01-000036
   tags:
     - cat1
     - high
@@ -163,6 +167,7 @@
       check_mode: no
       changed_when: no
       ignore_errors: yes
+  when: xccdf_hdf_group_KEYC-01-000040
   tags:
     - cat1
     - high
@@ -173,6 +178,7 @@
 
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | PATCH | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
 #  shell:
+#  when: xccdf_hdf_group_KEYC-01-000040
 #  tags:
 #    - cat1
 #    - high
@@ -253,6 +259,7 @@
         register: x509_timestamp
         ignore_errors: no
       when: '"auth-x509-client-username-form" not in initial_authenticators'
+  when: xccdf_hdf_group_KEYC-01-000041
   tags:
     - cat1
     - high
@@ -261,6 +268,7 @@
 
 #- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | PATCH | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
 #  shell:
+#  when: xccdf_hdf_group_KEYC-01-000041
 #  tags:
 #    - cat1
 #    - high
