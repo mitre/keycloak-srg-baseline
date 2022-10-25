@@ -653,6 +653,24 @@
           ignore_errors: no
       when: '"auth-otp-form" not in initial_authenticators'
   when: xccdf_hdf_group_KEYC_01_000026
+      # end conditional
+
+#    - name: get current executions
+#      shell: >
+#        {{path}}kcadm.sh get authentication/flows/browser/executions
+#      register: executions
+#      ignore_errors: no
+#
+#    - name: set initial flows' executions in json
+#      set_fact:
+#        json_executions: "{{ executions.stdout | from_json | community.general.json_query('[*]') }}"
+#
+#    - name: get auth-otp-form level
+#      set_fact:
+#        auth_otp_level: "{{ json_executions | community.general.json_query('[?providerId==`auth-otp-form`].level') }}"
+#
+#    - name: auth-otp-leve
+#      debug: msg={{auth_otp_level}}
   tags:
     - cat2
     - medium
