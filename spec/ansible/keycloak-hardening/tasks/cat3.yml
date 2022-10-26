@@ -3,7 +3,7 @@
   block:
     - name: Create RBAC roles
       shell: >
-        {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
+        {{ path }}kcadm.sh create roles -r {{ keycloak_realm }} -s name={{ role_policy_name }} -s 'description={{ role_policy_description }}'
       register: result
       check_mode: no
       changed_when: no
@@ -11,7 +11,7 @@
 
     - name: Add RBAC roles
       shell: >
-        {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
+        {{ path }}kcadm.sh add-roles --uusername {{ user_name }} --rolename {{ role_policy_name }} -r {{ keycloak_realm }}
       register: result
       check_mode: no
       changed_when: no

@@ -12,7 +12,7 @@
   block:
     - name: Configure to audit account creation
       shell: >
-          {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+          {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
           -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
@@ -41,7 +41,7 @@
   block:
     - name: Configure to audit account modification
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
         -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
@@ -69,7 +69,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | AUDIT | Keycloak must be configured to automatically audit account disabling actions."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -95,7 +95,7 @@
   block:
     - name: Configure to audit account removal
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
         -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
@@ -123,9 +123,9 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000009 | AUDIT | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period."
   shell: |
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'failureFactor={{failure_factor}}'
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'maxDeltaTimeSeconds={{max_delta_time_seconds}}'
+    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'bruteForceProtected=true'
+    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'failureFactor={{ failure_factor }}'
+    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'maxDeltaTimeSeconds={{ max_delta_time_seconds }}'
   register: result
   check_mode: no
   changed_when: no
@@ -148,7 +148,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | AUDIT | Keycloak must be configured to audit each authentication and authorization transaction."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -184,9 +184,9 @@
 # TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | AUDIT | Keycloak configuration audit records must identify what type of events occurred."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-    -s 'enabledEventTypes={{enabled_event_types_string}}'
+    -s 'enabledEventTypes={{ enabled_event_types_string }}'
   register: result
   check_mode: no
   changed_when: no
@@ -212,9 +212,9 @@
   block:
     - name: Configure to audit date and time of event occurrence
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
         -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -222,9 +222,9 @@
 
     - name: Set log console format in keycloak.conf
       lineinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         regexp: '^log-console-format'
-        line: log-console-format={{log_console_format}}
+        line: log-console-format={{ log_console_format }}
         state: present
         create: yes
       register: result
@@ -249,7 +249,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | AUDIT | Keycloak configuration audit records must identify where the events occurred."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -273,7 +273,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | AUDIT | Keycloak configuration audit records must identify the source of the events."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
@@ -297,9 +297,9 @@
 # TODO: enabledEventTypes part probably isn't correct here
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | AUDIT | Keycloak configuration audit records must identify the outcome of the events."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-    -s 'enabledEventTypes={{enabled_event_types_string}}'
+    -s 'enabledEventTypes={{ enabled_event_types_string }}'
   register: result
   check_mode: no
   changed_when: no
@@ -322,7 +322,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | AUDIT | Keycloak configuration audit records must identify any individual user or process associated with the event."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
   check_mode: no
   changed_when: no
@@ -347,8 +347,8 @@
   block:
     - name: Configure alerts to SA and ISSO upon audit processing failure
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -356,7 +356,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -370,11 +370,11 @@
 
     # - name: Set quarkus syslog in quarkus.properties
     #   blockinfile:
-    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
     #     block: |
     #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
     #     state: present
     #     create: yes
     #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
@@ -387,7 +387,7 @@
       lineinfile:
         path: /etc/audit/auditd.conf
         regexp: '^action_mail_acct = '
-        line: action_mail_acct = {{action_mail_account}}
+        line: action_mail_acct = {{ action_mail_account }}
         state: present
         create: yes
       register: result
@@ -414,8 +414,8 @@
   block:
     - name: Configure audit record overwriting to FIFO
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -423,7 +423,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -437,11 +437,11 @@
 
     # - name: Set quarkus syslog in quarkus.properties
     #   blockinfile:
-    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
     #     block: |
     #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
     #     state: present
     #     create: yes
     #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
@@ -471,8 +471,8 @@
   block:
     - name: Configure queuing of audit records locally
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -480,7 +480,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -494,11 +494,11 @@
 
     # - name: Set quarkus syslog in quarkus.properties
     #   blockinfile:
-    #     path: "{{keycloak_home}}/conf/keycloak.conf"
+    #     path: "{{ keycloak_home }}/conf/keycloak.conf"
     #     block: |
     #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
     #     state: present
     #     create: yes
     #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
@@ -526,9 +526,9 @@
 # TODO: Where does profile.properties go?
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | AUDIT | Keycloak must be configured to disable non-essential modules."
   blockinfile:
-    path: "{{keycloak_home}}/conf/profile.properties"
+    path: "{{ keycloak_home }}/conf/profile.properties"
     block: |
-      {{profile_properties_features}}
+      {{ profile_properties_features }}
     state: present
     create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK - PROFILE FEATURES"
@@ -579,7 +579,7 @@
   block:
     - name: get current flows
       shell: >
-        {{path}}kcadm.sh get authentication/flows
+        {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
       ignore_errors: no
 
@@ -602,12 +602,12 @@
             initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
         - debug:
-            msg: "{{initial_ids}}"
+            msg: "{{ initial_ids }}"
 
         - name: create a copy of browser authentication flow
           shell: |
-            {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-            {{path}}kcadm.sh get authentication/flows
+            {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
+            {{ path }}kcadm.sh get authentication/flows
           register: new_flows
           check_mode: no
           changed_when: no
@@ -623,18 +623,18 @@
 
         - name: update new flow's alias
           shell: |
-            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"otp_alias\"
+            {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"otp_alias\"
           ignore_errors: no
 
         - name: update new flow's execution
           shell: |
-            {{path}}kcadm.sh create authentication/flows/otp_alias/executions/execution -s \"provider\"=\"auth-otp-form\"
+            {{ path }}kcadm.sh create authentication/flows/otp_alias/executions/execution -s \"provider\"=\"auth-otp-form\"
           register: success
           ignore_errors: no
 
         - name: get new flows execution
           shell: |
-            {{path}}kcadm.sh get authentication/flows/otp_alias/executions
+            {{ path }}kcadm.sh get authentication/flows/otp_alias/executions
           register: custom_flow
           ignore_errors: no
 
@@ -648,7 +648,7 @@
 
         - name: create config
           shell: |
-            {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
+            {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
           register: custom_flow
           ignore_errors: no
       when: '"auth-otp-form" not in initial_authenticators'
@@ -657,7 +657,7 @@
 
 #    - name: get current executions
 #      shell: >
-#        {{path}}kcadm.sh get authentication/flows/browser/executions
+#        {{ path }}kcadm.sh get authentication/flows/browser/executions
 #      register: executions
 #      ignore_errors: no
 #
@@ -670,7 +670,7 @@
 #        auth_otp_level: "{{ json_executions | community.general.json_query('[?providerId==`auth-otp-form`].level') }}"
 #
 #    - name: auth-otp-leve
-#      debug: msg={{auth_otp_level}}
+#      debug: msg={{ auth_otp_level }}
   tags:
     - cat2
     - medium
@@ -690,7 +690,7 @@
   block:
     - name: get current flows
       shell: >
-        {{path}}kcadm.sh get authentication/flows
+        {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
       ignore_errors: no
 
@@ -714,8 +714,8 @@
 
         - name: create a copy of browser authentication flow
           shell: |
-            {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-            {{path}}kcadm.sh get authentication/flows
+            {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
+            {{ path }}kcadm.sh get authentication/flows
           register: new_flows
           check_mode: no
           changed_when: no
@@ -731,18 +731,18 @@
 
         - name: update new flow's alias
           shell: |
-            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"browser\"
+            {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"browser\"
           ignore_errors: no
 
         - name: update new flow's execution
           shell: |
-            {{path}}kcadm.sh create authentication/flows/browser/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
+            {{ path }}kcadm.sh create authentication/flows/browser/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
           register: success
           ignore_errors: no
 
         - name: get new flows execution
           shell: |
-            {{path}}kcadm.sh get authentication/flows/browser/executions
+            {{ path }}kcadm.sh get authentication/flows/browser/executions
           register: custom_flow
           ignore_errors: no
 
@@ -756,7 +756,7 @@
 
         - name: create config
           shell: |
-            {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
+            {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
           register: custom_flow
           ignore_errors: no
       when: '"auth-x509-client-username-form" not in initial_authenticators'
@@ -956,7 +956,7 @@
   block:
     - name: get current flows
       shell: >
-        {{path}}kcadm.sh get authentication/flows
+        {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
       ignore_errors: no
 
@@ -980,8 +980,8 @@
 
         - name: create a copy of browser authentication flow
           shell: |
-            {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-            {{path}}kcadm.sh get authentication/flows
+            {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
+            {{ path }}kcadm.sh get authentication/flows
           register: new_flows
           check_mode: no
           changed_when: no
@@ -997,18 +997,18 @@
 
         - name: update new flow's alias
           shell: |
-            {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"x509_alias\"
+            {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"x509_alias\"
           ignore_errors: no
 
         - name: update new flow's execution
           shell: |
-            {{path}}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
+            {{ path }}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
           register: success
           ignore_errors: no
 
         - name: get new flows execution
           shell: |
-            {{path}}kcadm.sh get authentication/flows/x509_alias/executions
+            {{ path }}kcadm.sh get authentication/flows/x509_alias/executions
           register: custom_flow
           ignore_errors: no
 
@@ -1022,7 +1022,7 @@
 
         - name: create config
           shell: |
-            {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.mapper-selection":"example@mail.com"},"alias":"new_flow"}'
+            {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.mapper-selection":"example@mail.com"},"alias":"new_flow"}'
           register: custom_flow
           ignore_errors: no
       when: '"auth-x509-client-username-form" not in initial_authenticators'
@@ -1045,7 +1045,7 @@
   block:
     - name: Configure notifications when accounts are created
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
       changed_when: no
@@ -1054,7 +1054,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
+        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000047
   tags:
     - cat2
@@ -1075,7 +1075,7 @@
   block:
     - name: Configure notifications when accounts are modified
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
       changed_when: no
@@ -1084,7 +1084,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
+        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000048
   tags:
     - cat2
@@ -1105,7 +1105,7 @@
   block:
     - name: Configure notifications when accounts are disabled
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
       changed_when: no
@@ -1114,7 +1114,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
+        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000049
   tags:
     - cat2
@@ -1135,7 +1135,7 @@
   block:
     - name: Configure notifications when accounts are removed
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
       check_mode: no
       changed_when: no
@@ -1144,7 +1144,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
+        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000050
   tags:
     - cat2
@@ -1163,7 +1163,7 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | AUDIT | Keycloak must be configured to automatically audit account enabling actions."
   shell: >
-    {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true
   register: result
   check_mode: no
@@ -1189,7 +1189,7 @@
   block:
     - name: Configure notifications when accounts are enabled
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners={{events_listeners_string}}'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners={{ events_listeners_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -1198,7 +1198,7 @@
     - name: Copy custom plugin jar from local directory
       copy:
         src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{keycloak_home}}/providers/password-min-time-policy-0.0.1.jar"
+        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000052
   tags:
     - cat2
@@ -1217,8 +1217,8 @@
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | AUDIT | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
   shell: |
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'bruteForceProtected=true'
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s 'permanentLockout=true'
+    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'bruteForceProtected=true'
+    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'permanentLockout=true'
   register: result
   check_mode: no
   changed_when: no
@@ -1243,8 +1243,8 @@
   block:
     - name: Configure transport of audit records
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -1252,7 +1252,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -1266,11 +1266,11 @@
 
     # - name: Set quarkus syslog in quarkus.properties
     #   blockinfile:
-    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
     #     block: |
     #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
+    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
     #     state: present
     #     create: yes
     #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
@@ -1298,9 +1298,9 @@
   block:
     - name: Configure to record time stamps in UTC
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
         -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -1308,7 +1308,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -1322,12 +1322,12 @@
 
     # - name: Set quarkus syslog in quarkus.properties
     #   blockinfile:
-    #     path: "{{keycloak_home}}/conf/quarkus.properties"
+    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
     #     block: |
     #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{quarkus_endpoint}}
-    #       quarkus.log.syslog.protocol={{quarkus_protocol}}
-    #       quarkus.log.syslog.format={{quarkus_format}}
+    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
+    #       quarkus.log.syslog.format={{ quarkus_format }}
     #     state: present
     #     create: yes
     #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
@@ -1355,9 +1355,9 @@
   block:
     - name: Configure time stamp granularity
       shell: >
-        {{path}}kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true 
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
         -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{enabled_event_types_string}}'
+        -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
       check_mode: no
       changed_when: no
@@ -1365,7 +1365,7 @@
 
     - name: Set spi events in keycloak.conf
       blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
@@ -1379,9 +1379,9 @@
 
     - name: Set log console format in keycloak.conf
       lineinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         regexp: '^log-console-format'
-        line: log-console-format={{log_console_format}}
+        line: log-console-format={{ log_console_format }}
         state: present
         create: yes
       register: result

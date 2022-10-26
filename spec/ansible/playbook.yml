@@ -1,5 +1,5 @@
 ---
-- hosts: "{{container_name}}"
+- hosts: "{{ container_name }}"
 #  connection: local
 #  become: yes
   user: root
