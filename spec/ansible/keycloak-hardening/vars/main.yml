@@ -2,6 +2,12 @@
 is_container: true
 container_name: keycloak_test
 target_python_path: "{{ansible_facts['discovered_interpreter_python']}}"  #/usr/libexec/platform-python3.6
+pip_dependencies:
+  - setuptools
+  - virtualenv
+  - cryptography
+  - lxml
+  - boto
 package_dependencies:
   - unzip
   - openssl

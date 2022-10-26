@@ -4,60 +4,16 @@
       shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin"
       register: signin
 
-- name: Zscaler (shakes fist at sky)
-  block:
-    - name: copy cert
-      copy:
-        src: ZScaler_Root.crt
-        dest: /
-    - name: trust new cert
-      shell: >
-        trust anchor /ZScaler_Root.crt
-  tags:
-  - jar_stuff
-      
-#    - name: Print all available facts
-#      ansible.builtin.debug:
-#        var: ansible_facts
-
-- name: pull jar
-  block:
-    - name: fetch jar from github
-      ansible.builtin.get_url:
-        url: "{{jarfile_url}}"
-        dest: /tmp/password-min-time-policy-0.0.1.jar
-        # headers:
-        #   Accept: application/vnd.github+json
-        #   Authorization: "Bearer {{github_pat}}"
-      # delegate_to: localhost
-
-      vars:
-        - jarfile_url: https://mitre.github.io/keycloak-custom-policies/assets/password-min-time-policy-current.jar
-  tags:
-    - jar_stuff
-
-#- name: Upgrade pip
-#  command: "{{ target_python_path }} -m pip install --upgrade pip"
 - name: Upgrade pip
   package:
     use: pip
     name: pip
     state: latest
-#  ansible.builtin.pip:
-#    name: pip
-#    state: present
-#    extra_args: --upgrade
-#    executable: /usr/local/bin/pip
   tags: test
-#  vars:
-#    ansible_python_interpreter: /usr/libexec/platform-python3.6
 
 - name: Install pip dependencies
   ansible.builtin.pip:
-    name:
-      - setuptools
-      - virtualenv
-      - cryptography
+    name: "{{ pip_dependencies }}"
     state: present
   tags: test
 
@@ -150,3 +106,12 @@
 #    - name:
   tags:
     - testTrustStore
+
+- name: Pull custom-event-listener
+  community.general.maven_artifact:
+    group_id: io.github.mitre
+    artifact_id: custom-event-listener
+    version: 0.0.1
+    dest: /tmp/password-min-time-policy-0.0.1-test.jar
+  tags:
+    - test
