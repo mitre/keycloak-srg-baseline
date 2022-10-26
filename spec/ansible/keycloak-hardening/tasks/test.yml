@@ -2,18 +2,18 @@
 #  command: ls -lah
 #  register: ls_out
 #
-#- debug: msg="{{ls_out}}"
+#- debug: msg="{{ ls_out }}"
 #
-#- debug: msg="kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=[\"jboss-logging\"] -s enabledEventTypes=\"{{enabled_event_types}}\""
+#- debug: msg="kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=[\"jboss-logging\"] -s enabledEventTypes=\"{{ enabled_event_types }}\""
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | AUDIT | Keycloak must be configured to automatically audit account creation"
-#  shell: msg="kcadm.sh update events/config -r {{keycloak_realm}} -s adminEventsEnabled=true -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=[\"jboss-logging\"] -s enabledEventTypes=\"{{enabled_event_types}}\""
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | Keycloak must be configured to automatically audit account creation"
+#  ansible.builtin.shell: msg="kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=[\"jboss-logging\"] -s enabledEventTypes=\"{{ enabled_event_types }}\""
 #  register: result
-#  always_run: yes
-#  changed_when: no
-#  ignore_errors: yes
+#  always_run: true
+#  changed_when: false
+#  ignore_errors: true
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000005
-#    - audit
+#    

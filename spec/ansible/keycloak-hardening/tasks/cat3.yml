@@ -1,33 +1,23 @@
 ---
-- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | AUDIT | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
+- name: LOW | xccdf_hdf_group_KEYC-01-000053 | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization.
   block:
     - name: Create RBAC roles
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh create roles -r {{ keycloak_realm }} -s name={{ role_policy_name }} -s 'description={{ role_policy_description }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Add RBAC roles
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh add-roles --uusername {{ user_name }} --rolename {{ role_policy_name }} -r {{ keycloak_realm }}
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000053
   tags:
     - cat3
     - low
     - xccdf_hdf_group_KEYC-01-000053
-    - audit
-
-#- name: "LOW | xccdf_hdf_group_KEYC-01-000053 | PATCH | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization."
-#  shell:
-#  when: xccdf_hdf_group_KEYC_01_000053
-#  tags:
-#    - cat3
-#    - low
-#    - xccdf_hdf_group_KEYC-01-000053
-#    - patch

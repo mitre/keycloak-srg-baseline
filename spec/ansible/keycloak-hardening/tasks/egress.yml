@@ -1,22 +1,24 @@
-- name: Restart Keycloak container
+---
+- name: Restart Keycloak container to force changes to take effect
   block:
-    - name: Stop
+    - name: Stop container
       delegate_to: localhost
-      shell: >
-        docker stop {{container_name}}
+      ansible.builtin.shell: >
+        docker stop {{ container_name }}
 
     - name: Pause
       delegate_to: localhost
       wait_for:
         timeout: 5
 
-    - name: Start
+    - name: Start container
       delegate_to: localhost
-      shell: >
-        docker start {{container_name}}
+      ansible.builtin.shell: >
+        docker start {{ container_name }}
   tags:
     - xccdf_hdf_group_KEYC-01-000047
     - xccdf_hdf_group_KEYC-01-000048
     - xccdf_hdf_group_KEYC-01-000049
     - xccdf_hdf_group_KEYC-01-000050
     - egress
+  when: is_container

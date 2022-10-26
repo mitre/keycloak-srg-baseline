@@ -1,1450 +1,1040 @@
 ---
 - name: Create a list variable for enabledEventTypes
   # TODO: Do I need to fetch existing enabledEventTypes first?
-  set_fact:
+  ansible.builtin.set_fact:
     enabled_event_types_list: []
-
 #- name: enabled_event_types list to string
-#  set_fact:
+#  ansible.builtin.set_fact:
 #    enabledEventTypes: "{{ '[ ' + enabled_event_types_list | join(', ') + ' ]' }}"
 
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | AUDIT | Keycloak must be configured to automatically audit account creation."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000005 | Keycloak must be configured to automatically audit account creation.
   block:
     - name: Configure to audit account creation
-      shell: >
-          {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-          -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
+        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Update enabled_event_types_list
-      set_fact:
+      ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
   when: xccdf_hdf_group_KEYC_01_000005
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000005
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000005 | PATCH | Keycloak must be configured to automatically audit account creation."
-#  shell:
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000005
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | AUDIT | Keycloak must be configured to automatically audit account modification."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000006 | Keycloak must be configured to automatically audit account modification.
   block:
     - name: Configure to audit account modification
-      shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Update enabled_event_types_list
-      set_fact:
+      ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | unique }}"
   when: xccdf_hdf_group_KEYC_01_000006
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000006
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000006 | PATCH | Keycloak must be configured to automatically audit account modification."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000006
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000006
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | AUDIT | Keycloak must be configured to automatically audit account disabling actions."
-  shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-    -s adminEventsDetailsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000007 | Keycloak must be configured to automatically audit account disabling actions.
+  ansible.builtin.shell: >
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000007
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000007
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000007 | PATCH | Keycloak must be configured to automatically audit account disabling actions."
-#  shell:
-#  when: xccdf_hdf_group_KEYC_01_000007
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000007
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | AUDIT | Keycloak must be configured to automatically audit account removal actions."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000008 | Keycloak must be configured to automatically audit account removal actions.
   block:
     - name: Configure to audit account removal
-      shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Update enabled_event_types_list
-      set_fact:
+      ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | unique }}"
   when: xccdf_hdf_group_KEYC_01_000008
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000008
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000008 | PATCH | Keycloak must be configured to automatically audit account removal actions."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000008
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000008
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000009 | AUDIT | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period."
-  shell: |
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000009 | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts
+    within a 15-minute time period.
+  ansible.builtin.shell: |
     {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'bruteForceProtected=true'
     {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'failureFactor={{ failure_factor }}'
     {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'maxDeltaTimeSeconds={{ max_delta_time_seconds }}'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000009
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000009
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000009 | PATCH | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts within a 15-minute time period."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000009
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000009
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | AUDIT | Keycloak must be configured to audit each authentication and authorization transaction."
-  shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000010 | Keycloak must be configured to audit each authentication and authorization transaction.
+  ansible.builtin.shell: >
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000010
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000010
-    - audit
+    
 
 # TODO: need to determine appropriate event types
 #- name: xccdf_hdf_group_KEYC-01-000010 | Update enabled_event_types list
-#  set_fact:
+#  ansible.builtin.set_fact:
 #        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) |unique }}"
 #  when: xccdf_hdf_group_KEYC_01_000010
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000010
-#    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000010 | PATCH | Keycloak must be configured to audit each authentication and authorization transaction."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000010
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000010
-#    - patch
+#    
 
 # TODO: enabledEventTypes part probably isn't correct here
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | AUDIT | Keycloak configuration audit records must identify what type of events occurred."
-  shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000011 | Keycloak configuration audit records must identify what type of events occurred.
+  ansible.builtin.shell: >
+    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{ enabled_event_types_string }}'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000011
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000011
-    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000011 | PATCH | Keycloak configuration audit records must identify what type of events occurred."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000011
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000011
-#    - patch
 
 # TODO: enabledEventTypes part probably isn't correct here
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012 | AUDIT | Keycloak configuration audit records must identify when (date and time) the events occurred."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000012 | Keycloak configuration audit records must identify when (date and time) the events occurred.
   block:
     - name: Configure to audit date and time of event occurrence
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
         -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set log console format in keycloak.conf
       lineinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
-        regexp: '^log-console-format'
+        regexp: ^log-console-format
         line: log-console-format={{ log_console_format }}
         state: present
-        create: yes
+        create: true
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000012
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000012
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000012 | PATCH | Keycloak configuration audit records must identify when (date and time) the events occurred."
-#  shell:
-#  when: xccdf_hdf_group_KEYC_01_000012
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000012
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | AUDIT | Keycloak configuration audit records must identify where the events occurred."
-  shell: >
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000013 | Keycloak configuration audit records must identify where the events occurred.
+  ansible.builtin.shell: >
     {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000013
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000013
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000013 | PATCH | Keycloak configuration audit records must identify where the events occurred."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000013
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000013
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | AUDIT | Keycloak configuration audit records must identify the source of the events."
-  shell: >
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000014 | Keycloak configuration audit records must identify the source of the events.
+  ansible.builtin.shell: >
     {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000014
-    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000014 | PATCH | Keycloak configuration audit records must identify the source of the events."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000014
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000014
-#    - patch
 
 # TODO: enabledEventTypes part probably isn't correct here
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | AUDIT | Keycloak configuration audit records must identify the outcome of the events."
-  shell: >
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000015 | Keycloak configuration audit records must identify the outcome of the events.
+  ansible.builtin.shell: >
     {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
     -s 'enabledEventTypes={{ enabled_event_types_string }}'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000015
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000015
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000015 | PATCH | Keycloak configuration audit records must identify the outcome of the events."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000015
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000015
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | AUDIT | Keycloak configuration audit records must identify any individual user or process associated with the event."
-  shell: >
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000016 | Keycloak configuration audit records must identify any individual user or process associated with the event.
+  ansible.builtin.shell: >
     {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000016
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000016
-    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000016 | PATCH | Keycloak configuration audit records must identify any individual user or process associated with the event."
-#  shell: 
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000016
-#    - patch
 
 # TODO: enabledEventTypes part probably isn't correct here
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017 | AUDIT | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000017 | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs.
   block:
     - name: Configure alerts to SA and ISSO upon audit processing failure
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi events in keycloak.conf
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     # - name: Set quarkus syslog in quarkus.properties
-    #   blockinfile:
+    #   ansible.builtin.blockinfile:
     #     path: "{{ keycloak_home }}/conf/quarkus.properties"
     #     block: |
     #       quarkus.log.syslog.enable=true
     #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
     #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
     #     state: present
-    #     create: yes
+    #     create: true
     #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
     #   register: result
-    #   check_mode: no
-    #   changed_when: no
-    #   ignore_errors: yes
+    #   check_mode: false
+    #   changed_when: false
+    #   ignore_errors: true
 
     - name: Set action mail account in auditd.conf
       lineinfile:
         path: /etc/audit/auditd.conf
-        regexp: '^action_mail_acct = '
+        regexp: "^action_mail_acct = "
         line: action_mail_acct = {{ action_mail_account }}
         state: present
-        create: yes
+        create: true
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000017
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000017
-    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000017 | PATCH | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs."
-#  shell: 
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000017
-#    - patch
 
 # TODO: enabledEventTypes part probably isn't correct here
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | AUDIT | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000018 | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out
+    manner.
   block:
     - name: Configure audit record overwriting to FIFO
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi events in keycloak.conf
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    # - name: Set quarkus syslog in quarkus.properties
-    #   blockinfile:
-    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
-    #     block: |
-    #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-    #     state: present
-    #     create: yes
-    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-    #   register: result
-    #   check_mode: no
-    #   changed_when: no
-    #   ignore_errors: yes
+  # - name: Set quarkus syslog in quarkus.properties
+  #   ansible.builtin.blockinfile:
+  #     path: "{{ keycloak_home }}/conf/quarkus.properties"
+  #     block: |
+  #       quarkus.log.syslog.enable=true
+  #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+  #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
+  #     state: present
+  #     create: true
+  #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+  #   register: result
+  #   check_mode: false
+  #   changed_when: false
+  #   ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000018
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000018
-    - audit
+    
 
 # TODO: syslog is configured to alert the SA and ISSO when any audit processing failure occurs?
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000018 | PATCH | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner."
-#  shell: 
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000018
-#    - patch
-
 # TODO: enabledEventTypes part probably isn't correct here
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019 | AUDIT | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000019 | Keycloak must be configured to queue audit records locally until communication is restored when any audit
+    processing failure occurs.
   block:
     - name: Configure queuing of audit records locally
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi events in keycloak.conf
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    # - name: Set quarkus syslog in quarkus.properties
-    #   blockinfile:
-    #     path: "{{ keycloak_home }}/conf/keycloak.conf"
-    #     block: |
-    #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-    #     state: present
-    #     create: yes
-    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-    #   register: result
-    #   check_mode: no
-    #   changed_when: no
-    #   ignore_errors: yes
+  # - name: Set quarkus syslog in quarkus.properties
+  #   ansible.builtin.blockinfile:
+  #     path: "{{ keycloak_home }}/conf/keycloak.conf"
+  #     block: |
+  #       quarkus.log.syslog.enable=true
+  #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+  #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
+  #     state: present
+  #     create: true
+  #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+  #   register: result
+  #   check_mode: false
+  #   changed_when: false
+  #   ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000019
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000019
-    - audit
+    
 
 # TODO: log service is enabled on the system?
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000019 | PATCH | Keycloak must be configured to queue audit records locally until communication is restored when any audit processing failure occurs."
-#  shell: 
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000019
-#    - patch
-
 # TODO: Where does profile.properties go?
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | AUDIT | Keycloak must be configured to disable non-essential modules."
-  blockinfile:
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000021 | Keycloak must be configured to disable non-essential modules.
+  ansible.builtin.blockinfile:
     path: "{{ keycloak_home }}/conf/profile.properties"
     block: |
       {{ profile_properties_features }}
     state: present
-    create: yes
+    create: true
     marker: "# {mark} ANSIBLE MANAGED BLOCK - PROFILE FEATURES"
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000021
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000021
-    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000021 | PATCH | Keycloak must be configured to disable non-essential modules."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000021
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000021
-#    - patch
 
 # TODO: applicable in a container?
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | AUDIT | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
-#  shell: 
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000024
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000024
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | PATCH | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000024
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000024
-#    - patch
 
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | AUDIT | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000026 | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV)
+    credentials for authenticating privileged user accounts.
   block:
     - name: get current flows
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
-      ignore_errors: no
+      ignore_errors: false
 
     - name: set initial flows' authenticators in json
-      set_fact:
+      ansible.builtin.set_fact:
         initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
 
     - name: set initial flows' authenticator to array
-      set_fact:
+      ansible.builtin.set_fact:
         initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
 
     # The following is executed on the condition that auth-otp-form was not found
     - block:
         - name: set initial flows' ids in json
-          set_fact:
+          ansible.builtin.set_fact:
             initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
         - name: set initial flows' ids to array
-          set_fact:
+          ansible.builtin.set_fact:
             initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
         - debug:
             msg: "{{ initial_ids }}"
 
         - name: create a copy of browser authentication flow
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
             {{ path }}kcadm.sh get authentication/flows
           register: new_flows
-          check_mode: no
-          changed_when: no
-          ignore_errors: no
+          check_mode: false
+          changed_when: false
+          ignore_errors: false
 
         - name: set new flows in json
-          set_fact:
+          ansible.builtin.set_fact:
             new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
         - name: set variable for new flow id
-          set_fact:
+          ansible.builtin.set_fact:
             new_id: "{{ new_ids | difference(initial_ids) | list }}"
 
         - name: update new flow's alias
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"otp_alias\"
-          ignore_errors: no
+          ignore_errors: false
 
         - name: update new flow's execution
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create authentication/flows/otp_alias/executions/execution -s \"provider\"=\"auth-otp-form\"
           register: success
-          ignore_errors: no
+          ignore_errors: false
 
         - name: get new flows execution
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh get authentication/flows/otp_alias/executions
           register: custom_flow
-          ignore_errors: no
+          ignore_errors: false
 
         - name: set new flow in json
-          set_fact:
+          ansible.builtin.set_fact:
             custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
 
         - name: get x509 execution id
-          set_fact:
+          ansible.builtin.set_fact:
             x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-otp-form`].id') }}"
 
         - name: create config
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
           register: custom_flow
-          ignore_errors: no
+          ignore_errors: false
       when: '"auth-otp-form" not in initial_authenticators'
   when: xccdf_hdf_group_KEYC_01_000026
-      # end conditional
+  # end conditional
 
-#    - name: get current executions
-#      shell: >
-#        {{ path }}kcadm.sh get authentication/flows/browser/executions
-#      register: executions
-#      ignore_errors: no
-#
-#    - name: set initial flows' executions in json
-#      set_fact:
-#        json_executions: "{{ executions.stdout | from_json | community.general.json_query('[*]') }}"
-#
-#    - name: get auth-otp-form level
-#      set_fact:
-#        auth_otp_level: "{{ json_executions | community.general.json_query('[?providerId==`auth-otp-form`].level') }}"
-#
-#    - name: auth-otp-leve
-#      debug: msg={{ auth_otp_level }}
+  #    - name: get current executions
+  #      ansible.builtin.shell: >
+  #        {{ path }}kcadm.sh get authentication/flows/browser/executions
+  #      register: executions
+  #      ignore_errors: false
+  #
+  #    - name: set initial flows' executions in json
+  #      ansible.builtin.set_fact:
+  #        json_executions: "{{ executions.stdout | from_json | community.general.json_query('[*]') }}"
+  #
+  #    - name: get auth-otp-form level
+  #      ansible.builtin.set_fact:
+  #        auth_otp_level: "{{ json_executions | community.general.json_query('[?providerId==`auth-otp-form`].level') }}"
+  #
+  #    - name: auth-otp-leve
+  #      debug: msg={{ auth_otp_level }}
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000026
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000026 | PATCH | Keycloak must be configured to require multifactor authentication using Personal Identity Verification (PIV) credentials for authenticating privileged user accounts."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000026
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000026
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000027 | AUDIT | Keycloak must be configured to require multifactor authentication using Common Access Card (CAC) Personal Identity Verification (PIV) credentials for authenticating non-privileged user accounts."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000027 | Keycloak must be configured to require multifactor authentication using Common Access Card (CAC) Personal
+    Identity Verification (PIV) credentials for authenticating non-privileged user accounts.
   block:
     - name: get current flows
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
-      ignore_errors: no
+      ignore_errors: false
 
     - name: set initial flows' authenticators in json
-      set_fact:
+      ansible.builtin.set_fact:
         initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
 
     - name: set initial flows' authenticator to array
-      set_fact:
+      ansible.builtin.set_fact:
         initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
 
     # The following is executed on the condition that ... was not found
     - block:
         - name: set initial flows' ids in json
-          set_fact:
+          ansible.builtin.set_fact:
             initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
         - name: set initial flows' ids to array
-          set_fact:
+          ansible.builtin.set_fact:
             initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
         - name: create a copy of browser authentication flow
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
             {{ path }}kcadm.sh get authentication/flows
           register: new_flows
-          check_mode: no
-          changed_when: no
-          ignore_errors: no
+          check_mode: false
+          changed_when: false
+          ignore_errors: false
 
         - name: set new flows in json
-          set_fact:
+          ansible.builtin.set_fact:
             new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
         - name: set variable for new flow id
-          set_fact:
+          ansible.builtin.set_fact:
             new_id: "{{ new_ids | difference(initial_ids) | list }}"
 
         - name: update new flow's alias
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"browser\"
-          ignore_errors: no
+          ignore_errors: false
 
         - name: update new flow's execution
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create authentication/flows/browser/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
           register: success
-          ignore_errors: no
+          ignore_errors: false
 
         - name: get new flows execution
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh get authentication/flows/browser/executions
           register: custom_flow
-          ignore_errors: no
+          ignore_errors: false
 
         - name: set new flow in json
-          set_fact:
+          ansible.builtin.set_fact:
             custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
 
         - name: get x509 execution id
-          set_fact:
+          ansible.builtin.set_fact:
             x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-x509-client-username-form`].id') }}"
 
         - name: create config
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"new_flow"}'
           register: custom_flow
-          ignore_errors: no
+          ignore_errors: false
       when: '"auth-x509-client-username-form" not in initial_authenticators'
   when: xccdf_hdf_group_KEYC_01_000027
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000027
-    - audit
+#
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | Keycloak must be configured to enforce a minimum 15-character password length."
+#  ansible.builtin.shell: 
+#  register: result
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
+#  when: xccdf_hdf_group_KEYC_01_000029
+#  tags:
+#    - cat2
+#    - medium
+#    - xccdf_hdf_group_KEYC-01-000029
+#
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
+#  ansible.builtin.shell: 
+#  register: result
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
+#  when: xccdf_hdf_group_KEYC_01_000030
+#  tags:
+#    - cat2
+#    - medium
+#    - xccdf_hdf_group_KEYC-01-000030
+#    
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
+#  ansible.builtin.shell: 
+#  register: result
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
+#  when: xccdf_hdf_group_KEYC_01_000031
+#  tags:
+#    - cat2
+#    - medium
+#    - xccdf_hdf_group_KEYC-01-000031
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000027 | PATCH | Keycloak must be configured to require multifactor authentication using Common Access Card (CAC) Personal Identity Verification (PIV) credentials for authenticating non-privileged user accounts."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000027
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000027
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | AUDIT | Keycloak must be configured to enforce a minimum 15-character password length."
-#  shell: 
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC_01_000029
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000029
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | PATCH | Keycloak must be configured to enforce a minimum 15-character password length."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000029
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000029
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | AUDIT | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC_01_000030
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000030
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | PATCH | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000030
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000030
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
-#  when: xccdf_hdf_group_KEYC_01_000031
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000031
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000031
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000031
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
-#  shell: 
-#  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000032
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000032
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000032 
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000032
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
-#  shell: 
+#    
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000033
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000033
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000033
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000033
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | AUDIT | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
-#  shell: 
+#    
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000034
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000034
-#    - audit
+#    
 #
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | PATCH | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000034
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000034
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | AUDIT | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
-#  shell: 
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000038
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000038
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | PATCH | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000038
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000038
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | AUDIT | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
-#  shell: 
+#    
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000039
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000039
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | PATCH | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000039
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000039
-#    - patch
-#
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000043 | AUDIT | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication."
+#    
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000043 | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication.
   block:
     - name: get current flows
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
-      ignore_errors: no
+      ignore_errors: false
 
     - name: set initial flows' authenticators in json
-      set_fact:
+      ansible.builtin.set_fact:
         initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
 
     - name: set initial flows' authenticator to array
-      set_fact:
+      ansible.builtin.set_fact:
         initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
 
     # The following is executed on the condition that ... was not found
     - block:
         - name: set initial flows' ids in json
-          set_fact:
+          ansible.builtin.set_fact:
             initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
         - name: set initial flows' ids to array
-          set_fact:
+          ansible.builtin.set_fact:
             initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
         - name: create a copy of browser authentication flow
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
             {{ path }}kcadm.sh get authentication/flows
           register: new_flows
-          check_mode: no
-          changed_when: no
-          ignore_errors: no
+          check_mode: false
+          changed_when: false
+          ignore_errors: false
 
         - name: set new flows in json
-          set_fact:
+          ansible.builtin.set_fact:
             new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
         - name: set variable for new flow id
-          set_fact:
+          ansible.builtin.set_fact:
             new_id: "{{ new_ids | difference(initial_ids) | list }}"
 
         - name: update new flow's alias
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"x509_alias\"
-          ignore_errors: no
+          ignore_errors: false
 
         - name: update new flow's execution
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
           register: success
-          ignore_errors: no
+          ignore_errors: false
 
         - name: get new flows execution
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh get authentication/flows/x509_alias/executions
           register: custom_flow
-          ignore_errors: no
+          ignore_errors: false
 
         - name: set new flow in json
-          set_fact:
+          ansible.builtin.set_fact:
             custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
 
         - name: get x509 execution id
-          set_fact:
+          ansible.builtin.set_fact:
             x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-x509-client-username-form`].id') }}"
 
         - name: create config
-          shell: |
+          ansible.builtin.shell: |
             {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.mapper-selection":"example@mail.com"},"alias":"new_flow"}'
           register: custom_flow
-          ignore_errors: no
+          ignore_errors: false
       when: '"auth-x509-client-username-form" not in initial_authenticators'
   when: xccdf_hdf_group_KEYC_01_000043
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000043
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000043 | PATCH | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication."
-#  shell: 
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000043
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000047 | Keycloak must be configured to notify the system administrators and ISSO when accounts are created.
   block:
     - name: Configure notifications when accounts are created
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    - name: Copy custom plugin jar from local directory
-      copy:
-        src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000047
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000047
-    - audit
+    
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000047 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are created."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000047
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000047
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000048 | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified.
   block:
     - name: Configure notifications when accounts are modified
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    - name: Copy custom plugin jar from local directory
-      copy:
-        src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000048
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000048
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000048 | PATCH | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000048
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000048
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000049 | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions.
   block:
     - name: Configure notifications when accounts are disabled
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    - name: Copy custom plugin jar from local directory
-      copy:
-        src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000049
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000049
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000049 | PATCH | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000049
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000049
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050 | AUDIT | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000050 | Keycloak must be configured to notify the system administrators and ISSO for account removal actions.
   block:
     - name: Configure notifications when accounts are removed
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    - name: Copy custom plugin jar from local directory
-      copy:
-        src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000050
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000050
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000050 | PATCH | Keycloak must be configured to notify the system administrators and ISSO for account removal actions."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000050
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000050
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | AUDIT | Keycloak must be configured to automatically audit account enabling actions."
-  shell: >
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000051 | Keycloak must be configured to automatically audit account enabling actions.
+  ansible.builtin.shell: >
     {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
     -s adminEventsDetailsEnabled=true
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000051
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000051
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000051 | PATCH | Keycloak must be configured to automatically audit account enabling actions."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000051
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000051
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | AUDIT | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000052 | Keycloak must be configured to notify system administrators and ISSO of account enabling actions.
   block:
     - name: Configure notifications when accounts are enabled
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners={{ events_listeners_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    - name: Copy custom plugin jar from local directory
-      copy:
-        src: /tmp/password-min-time-policy-0.0.1.jar
-        dest: "{{ keycloak_home }}/providers/password-min-time-policy-0.0.1.jar"
   when: xccdf_hdf_group_KEYC_01_000052
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000052
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000052 | PATCH | Keycloak must be configured to notify system administrators and ISSO of account enabling actions."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000052
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000052
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | AUDIT | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
-  shell: |
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000054 | Keycloak must be configured to maintain locks on user accounts until released by an administrator.
+  ansible.builtin.shell: |
     {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'bruteForceProtected=true'
     {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s 'permanentLockout=true'
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000054
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000054
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000054 | PATCH | Keycloak must be configured to maintain locks on user accounts until released by an administrator."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000054
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000054
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055 | AUDIT | Keycloak must be configured to send audit records to a centralized audit server."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000055 | Keycloak must be configured to send audit records to a centralized audit server.
   block:
     - name: Configure transport of audit records
-      shell: >
+      ansible.builtin.shell: >
         {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi events in keycloak.conf
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    # - name: Set quarkus syslog in quarkus.properties
-    #   blockinfile:
-    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
-    #     block: |
-    #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-    #     state: present
-    #     create: yes
-    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-    #   register: result
-    #   check_mode: no
-    #   changed_when: no
-    #   ignore_errors: yes
+  # - name: Set quarkus syslog in quarkus.properties
+  #   ansible.builtin.blockinfile:
+  #     path: "{{ keycloak_home }}/conf/quarkus.properties"
+  #     block: |
+  #       quarkus.log.syslog.enable=true
+  #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+  #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
+  #     state: present
+  #     create: true
+  #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+  #   register: result
+  #   check_mode: false
+  #   changed_when: false
+  #   ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000055
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000055
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000055 | PATCH | Keycloak must be configured to send audit records to a centralized audit server."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000055
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000055
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056 | AUDIT | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000056 | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for
+    audit records.
   block:
     - name: Configure to record time stamps in UTC
-      shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi events in keycloak.conf
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
-    # - name: Set quarkus syslog in quarkus.properties
-    #   blockinfile:
-    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
-    #     block: |
-    #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-    #       quarkus.log.syslog.format={{ quarkus_format }}
-    #     state: present
-    #     create: yes
-    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-    #   register: result
-    #   check_mode: no
-    #   changed_when: no
-    #   ignore_errors: yes
+  # - name: Set quarkus syslog in quarkus.properties
+  #   ansible.builtin.blockinfile:
+  #     path: "{{ keycloak_home }}/conf/quarkus.properties"
+  #     block: |
+  #       quarkus.log.syslog.enable=true
+  #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+  #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
+  #       quarkus.log.syslog.format={{ quarkus_format }}
+  #     state: present
+  #     create: true
+  #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+  #   register: result
+  #   check_mode: false
+  #   changed_when: false
+  #   ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000056
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000056
-    - audit
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000056 | PATCH | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000056
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000056
-#    - patch
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057 | AUDIT | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000057 | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records.
   block:
     - name: Configure time stamp granularity
-      shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true 
-        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
         -s 'enabledEventTypes={{ enabled_event_types_string }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi events in keycloak.conf
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           spi-events-listener-jboss-logging-success-level=info
           spi-events-listener-jboss-logging-error-level=error
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI EVENTS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set log console format in keycloak.conf
       lineinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
-        regexp: '^log-console-format'
+        regexp: ^log-console-format
         line: log-console-format={{ log_console_format }}
         state: present
-        create: yes
+        create: true
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000057
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000057
-    - audit
-
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000057 | PATCH | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000057
-#  tags:  
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000057
-#    - patch
+    
 #
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | AUDIT | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
-#  shell: 
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
+#  ansible.builtin.shell: 
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000059
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000059
-#    - audit
+#    
 #
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | PATCH | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000059
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000059
-#    - patch
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | AUDIT | AAA Services must not be configured with shared accounts."
-#  shell:
+#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | AAA Services must not be configured with shared accounts."
+#  ansible.builtin.shell:
 #  register: result
-#  check_mode: no
-#  changed_when: no
-#  ignore_errors: yes
+#  check_mode: false
+#  changed_when: false
+#  ignore_errors: true
 #  when: xccdf_hdf_group_KEYC_01_000064
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000064
-#    - audit
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | PATCH | AAA Services must not be configured with shared accounts."
-#  shell: 
-#  when: xccdf_hdf_group_KEYC_01_000064
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000064
-#    - patch
-#

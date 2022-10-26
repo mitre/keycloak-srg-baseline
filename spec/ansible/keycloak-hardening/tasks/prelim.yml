@@ -1,15 +1,18 @@
+---
 - name: Set Up
   block:
     - name: Sign in as admin
-      shell: "{{keycloak_home}}/bin/kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin --password admin"
+      ansible.builtin.shell: "{{ keycloak_home }}/bin/kcadm.sh config credentials --server {{ keycloak_server_address }} --realm {{ keycloak_realm }} --user {{ keycloak_admin_user }} --password {{ keycloak_admin_password }}"
       register: signin
 
 - name: Upgrade pip
-  package:
-    use: pip
-    name: pip
-    state: latest
-  tags: test
+  command: "{{ target_python_path }} -m pip install --upgrade pip"
+# - name: Upgrade pip
+#   package:
+#     use: pip
+#     name: pip
+#     state: latest
+#   tags: test
 
 - name: Install pip dependencies
   ansible.builtin.pip:
@@ -19,8 +22,8 @@
 
 - name: Install package dependencies
   ansible.builtin.package:
-   name: "{{ package_dependencies }}"
-   state: present
+    name: "{{ package_dependencies }}"
+    state: present
   tags: test
   when: not is_container
 
@@ -32,13 +35,13 @@
   block:
     - name: Copy SSL Certificate
       copy:
-        src: "{{https_certificate_files}}"
-        dest: "{{https_certificate_files_path}}"
+        src: "{{ https_certificate_files }}"
+        dest: "{{ https_certificate_files_path }}"
 
     - name: Copy SSL Key Certificate
       copy:
-        src: "{{https_certificate_key_files}}"
-        dest: "{{https_certificate_key_files_path}}"
+        src: "{{ https_certificate_key_files }}"
+        dest: "{{ https_certificate_key_files_path }}"
   when: not generate_certificates
   tags: test
 
@@ -53,16 +56,16 @@
         privatekey_path: "{{ https_certificate_key_files_path }}"
         common_name: "{{ certificate_common_name }}"
         organization_name: "{{ certificate_organization_name }}"
-#        subject_alt_name: "{{certificate_subject_alt_names}}"
+        #        subject_alt_name: "{{ certificate_subject_alt_names }}"
         country_name: "{{ certificate_country_name }}"
         organizational_unit_name: "{{ certificate_organizational_unit }}"
       register: csr
 
     - name: Create self-signed certificate from CSR
       community.crypto.x509_certificate:
-        path: "{{https_certificate_files_path}}"
+        path: "{{ https_certificate_files_path }}"
         csr_content: "{{ csr.csr }}"
-        privatekey_path: "{{https_certificate_key_files_path}}"
+        privatekey_path: "{{ https_certificate_key_files_path }}"
         provider: selfsigned
   when: generate_certificates
   tags: test
@@ -72,8 +75,8 @@
     path: "{{ item }}"
     owner: root
     group: root
-    mode: '0640'
-  loop: 
+    mode: "0640"
+  loop:
     - "{{ https_certificate_files_path }}"
     - "{{ https_certificate_key_files_path }}"
 
@@ -81,29 +84,29 @@
   block:
     - name: Obtain Certificate
       ansible.builtin.get_url:
-        url: "{{dod_certificate_url}}"
-        dest: "{{keycloak_home}}/cert.zip"
+        url: "{{ dod_certificate_url }}"
+        dest: "{{ keycloak_home }}/cert.zip"
 
     - name: Un-compress Certificate Archive
       ansible.builtin.unarchive:
-        src: "{{keycloak_home}}/cert.zip"
-        dest: "{{keycloak_home}}"
-        remote_src: yes
+        src: "{{ keycloak_home }}/cert.zip"
+        dest: "{{ keycloak_home }}"
+        remote_src: true
 
     - name: Prepare Certificate
-      shell: >
-        openssl pkcs7 -in {{keycloak_home}}/Certificates_PKCS7_*/*.pem.p7b -print_certs -out {{keycloak_home}}/DoD_CAs.pem
+      ansible.builtin.shell: >
+        openssl pkcs7 -in {{ keycloak_home }}/Certificates_PKCS7_*/*.pem.p7b -print_certs -out {{ keycloak_home }}/DoD_CAs.pem
 
     - name: Obtain Certificate
       java_cert:
-        cert_path: "{{keycloak_home}}/DoD_CAs.pem"
-        keystore_path: "{{spi_trust_store_file_path}}"
-        keystore_pass: "{{spi_trust_store_password}}"
+        cert_path: "{{ keycloak_home }}/DoD_CAs.pem"
+        keystore_path: "{{ spi_trust_store_file_path }}"
+        keystore_pass: "{{ spi_trust_store_password }}"
         keystore_create: true
         state: present
         cert_alias: DoD_CAs
         trust_cacert: true
-#    - name:
+  #    - name:
   tags:
     - testTrustStore
 
@@ -112,6 +115,6 @@
     group_id: io.github.mitre
     artifact_id: custom-event-listener
     version: 0.0.1
-    dest: /tmp/password-min-time-policy-0.0.1-test.jar
+    dest: /tmp/password-min-time-policy-0.0.1.jar
   tags:
     - test

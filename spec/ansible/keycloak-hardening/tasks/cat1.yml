@@ -1,277 +1,220 @@
 ---
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | AUDIT | Keycloak must be configured to use secure protocols when connecting to directory services."
+- name: HIGH | xccdf_hdf_group_KEYC-01-000022 | Keycloak must be configured to use secure protocols when connecting to directory services.
   block:
     - name: Set protocols in keycloak.conf
-      blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+      ansible.builtin.blockinfile:
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           hostname-strict-https=true
           https-client-auth=required
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
-
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set HTTPS TrustStore in keycloak.conf
-      blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+      ansible.builtin.blockinfile:
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
-          https-trust-store-file={{https_truststore_file_path}}
-          https-trust-store-password={{https_truststore_password}}
-          {{security_option}}
+          https-trust-store-file={{ https_truststore_file_path }}
+          https-trust-store-password={{ https_truststore_password }}
+          {{ security_option }}
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - HTTPS TRUST STORE"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000022
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000022
-    - audit
 
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000022 | PATCH | Keycloak must be configured to use secure protocols when connecting to directory services."
-#  shell:
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000022
-#    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | AUDIT | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
+- name: HIGH | xccdf_hdf_group_KEYC-01-000023 | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined
+    in the PPSM CAL and vulnerability assessments.
   block:
     - name: Set password hash algorithm
-      shell: >
-        {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set cache in keycloak.conf
-      blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+      ansible.builtin.blockinfile:
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           cache=ispn
           cache-stack=tcp
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - CACHE"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000023
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000023
-    - audit
 
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000023 | PATCH | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined in the PPSM CAL and vulnerability assessments."
-#  shell:
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000023
-#    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | AUDIT | Keycloak must be configured to uniquely identify and authenticate organizational users."
+- name: HIGH | xccdf_hdf_group_KEYC-01-000025 | Keycloak must be configured to uniquely identify and authenticate organizational users.
   block:
     - name: Create realm role
-      shell: >
-        {{path}}kcadm.sh create roles -r {{keycloak_realm}} -s name={{role_policy_name}} -s 'description={{role_policy_description}}'
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh create roles -r {{ keycloak_realm }} -s name={{ role_policy_name }} -s 'description={{ role_policy_description }}'
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Create user in realm
-      shell: >
-        {{path}}kcadm.sh add-roles --uusername {{user_name}} --rolename {{role_policy_name}} -r {{keycloak_realm}}
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh add-roles --uusername {{ user_name }} --rolename {{ role_policy_name }} -r {{ keycloak_realm }}
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000025
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000025
-    - audit
+    
 
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000025 | PATCH | Keycloak must be configured to uniquely identify and authenticate organizational users."
-#  shell:
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000025
-#    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | AUDIT | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
-  shell: >
-    {{path}}kcadm.sh update realms/{{keycloak_realm}} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
+- name: HIGH | xccdf_hdf_group_KEYC-01-000036 | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module.
+  ansible.builtin.shell: >
+    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
   register: result
-  check_mode: no
-  changed_when: no
-  ignore_errors: yes
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000036
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000036
-    - audit
 
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000036 | PATCH | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module."
-#  shell:
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000036
-#    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | AUDIT | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
+- name: HIGH | xccdf_hdf_group_KEYC-01-000040 | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for
+    PKI-based authentication.
   block:
     - name: Set protocols in keycloak.conf
-      blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+      ansible.builtin.blockinfile:
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
           hostname-strict-https=true
           https-client-auth=required
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - PROTOCOLS"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
 
     - name: Set spi trust store in keycloak.conf
-      blockinfile:
-        path: "{{keycloak_home}}/conf/keycloak.conf"
+      ansible.builtin.blockinfile:
+        path: "{{ keycloak_home }}/conf/keycloak.conf"
         block: |
-          spi-truststore-file-file={{spi_trust_store_file_path}}
-          spi-truststore-file-password={{spi_trust_store_password}}
-          spi-truststore-file-hostname-verification-policy={{spi_trust_store_policy}}
+          spi-truststore-file-file={{ spi_trust_store_file_path }}
+          spi-truststore-file-password={{ spi_trust_store_password }}
+          spi-truststore-file-hostname-verification-policy={{ spi_trust_store_policy }}
         state: present
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED BLOCK - SPI TRUST STORE"
       register: result
-      check_mode: no
-      changed_when: no
-      ignore_errors: yes
+      check_mode: false
+      changed_when: false
+      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000040
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000040
-    - audit
 
-# TODO: inspect issuer
-
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000040 | PATCH | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for PKI-based authentication."
-#  shell:
-#  when: xccdf_hdf_group_KEYC_01_000040
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000040
-#    - patch
-
-- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | AUDIT | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
+- name: HIGH | xccdf_hdf_group_KEYC-01-000041 | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication.
   block:
-    - name: get current flows
-      shell: >
-        {{path}}kcadm.sh get authentication/flows
+    - name: Get current flows
+      ansible.builtin.shell: >
+        {{ path }}kcadm.sh get authentication/flows
       register: initial_flows
-      ignore_errors: no
+      ignore_errors: false
 
-    - name: set initial flows' authenticators in json
-      set_fact:
+    - name: Set initial flows' authenticators in json
+      ansible.builtin.set_fact:
         initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
 
-    - name: set initial flows' authenticator to array
-      set_fact:
+    - name: Set initial flows' authenticator to array
+      ansible.builtin.set_fact:
         initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
 
     # The following is executed on the condition that auth-509-client-username-form was not found
     - block:
-      - name: set initial flows' ids in json
-        set_fact:
-          initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
+        - name: Set initial flows' ids in json
+          ansible.builtin.set_fact:
+            initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
-      - name: set initial flows' ids to array
-        set_fact:
-          initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
+        - name: Set initial flows' ids to array
+          ansible.builtin.set_fact:
+            initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
-      - name: create a copy of browser authentication flow
-        shell: |
-          {{path}}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-          {{path}}kcadm.sh get authentication/flows
-        register: new_flows
-        check_mode: no
-        changed_when: no
-        ignore_errors: no
+        - name: Create a copy of browser authentication flow
+          ansible.builtin.shell: |
+            {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
+            {{ path }}kcadm.sh get authentication/flows
+          register: new_flows
+          check_mode: false
+          changed_when: false
+          ignore_errors: false
 
-      - name: set new flows in json
-        set_fact:
-          new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
+        - name: Set new flows in json
+          ansible.builtin.set_fact:
+            new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
 
-      - name: set variable for new flow id
-        set_fact:
-          new_id: "{{ new_ids | difference(initial_ids) | list }}"
+        - name: Set variable for new flow id
+          ansible.builtin.set_fact:
+            new_id: "{{ new_ids | difference(initial_ids) | list }}"
 
-      - name: update new flow's alias
-        shell: |
-          {{path}}kcadm.sh update authentication/flows/{{new_id.0}} -s \"alias\"=\"x509_alias\"
-        ignore_errors: no
+        - name: Update new flow's alias
+          ansible.builtin.shell: |
+            {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"x509_alias\"
+          ignore_errors: false
 
-      - name: update new flow's execution
-        shell: |
-          {{path}}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
-        register: success
-        ignore_errors: no
+        - name: Update new flow's execution
+          ansible.builtin.shell: |
+            {{ path }}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
+          register: success
+          ignore_errors: false
 
-      - name: get new flows execution
-        shell: |
-          {{path}}kcadm.sh get authentication/flows/x509_alias/executions
-        register: custom_flow
-        ignore_errors: no
+        - name: Get new flows execution
+          ansible.builtin.shell: |
+            {{ path }}kcadm.sh get authentication/flows/x509_alias/executions
+          register: custom_flow
+          ignore_errors: false
 
-      - name: set new flow in json
-        set_fact:
-          custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
+        - name: Set new flow in json
+          ansible.builtin.set_fact:
+            custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
 
-      - name: get x509 execution id
-        set_fact:
-          x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-x509-client-username-form`].id') }}"
+        - name: Get x509 execution id
+          ansible.builtin.set_fact:
+            x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-x509-client-username-form`].id') }}"
 
-      - name: create config
-        shell: |
-          {{path}}kcadm.sh create "authentication/executions/{{x509_id.0}}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"x509_timestamp"}'
-        register: x509_timestamp
-        ignore_errors: no
+        - name: Create config
+          ansible.builtin.shell: |
+            {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"x509_timestamp"}'
+          register: x509_timestamp
+          ignore_errors: false
       when: '"auth-x509-client-username-form" not in initial_authenticators'
   when: xccdf_hdf_group_KEYC_01_000041
   tags:
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000041
-    - audit
-
-#- name: "HIGH | xccdf_hdf_group_KEYC-01-000041 | PATCH | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication."
-#  shell:
-#  when: xccdf_hdf_group_KEYC_01_000041
-#  tags:
-#    - cat1
-#    - high
-#    - xccdf_hdf_group_KEYC-01-000041
-#    - patch
-#
