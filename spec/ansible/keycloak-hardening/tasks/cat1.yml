@@ -13,7 +13,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
     - name: Set HTTPS TrustStore in keycloak.conf
       ansible.builtin.blockinfile:
@@ -28,8 +28,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000022
+#      ignore_errors: true
   tags:
     - cat1
     - high
@@ -50,10 +49,6 @@
         - password_policy_string | length > 0
         - '"hashAlgorithm(pbkdf2-sha256)" not in password_policy_string'
 
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
-
     - name: Set cache in keycloak.conf
       ansible.builtin.blockinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
@@ -66,8 +61,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000023
+#      ignore_errors: true
   tags:
     - cat1
     - high
@@ -112,10 +106,6 @@
         - password_policy_string | length > 0
         - '"hashAlgorithm(pbkdf2-sha256)" not in password_policy_string'
 
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
-
 - name: HIGH | xccdf_hdf_group_KEYC-01-000040 | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for
     PKI-based authentication.
   block:
@@ -131,7 +121,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
     - name: Set spi trust store in keycloak.conf
       ansible.builtin.blockinfile:
@@ -146,8 +136,9 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000040
+#      ignore_errors: true
+
+# TODO: Then inspect the certificates used in truststore
   tags:
     - cat1
     - high

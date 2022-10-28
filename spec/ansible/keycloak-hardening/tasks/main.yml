@@ -12,4 +12,4 @@
   import_tasks: cat3.yml
 
 - name: Egress
-  import_tasks: egress.yml
+  import_tasks: apply_changes.yml

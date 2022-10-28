@@ -1,9 +1,5 @@
 ---
-- name: Show post-password policy string
-  ansible.builtin.debug:
-    var: password_policy_string
-
-- name: Set password policy
+- name: Set password policy, enabled events types, and events listeners
   community.general.keycloak_realm:
     auth_keycloak_url: "{{ keycloak_server_address }}"
     auth_client_id: "{{ keycloak_client_id }}"
@@ -13,19 +9,10 @@
     auth_password: "{{ keycloak_admin_password }}"
     state: present
     password_policy: "{{ password_policy_string }}"
+    enabled_event_types: "{{ enabled_event_types_list }}"
+    events_listeners: "{{ events_listeners_list }}"
   tags:
     - password
-
-- name: Set enabled events types
-  community.general.keycloak_realm:
-    auth_keycloak_url: "{{ keycloak_server_address }}"
-    auth_client_id: "{{ keycloak_client_id }}"
-    realm: "{{ keycloak_realm }}"
-    auth_realm: "{{ keycloak_realm }}"
-    auth_username: "{{ keycloak_admin_user }}"
-    auth_password: "{{ keycloak_admin_password }}"
-    state: present
-    enabled_event_types: "{{ enabled_event_types_list }}"
 
 - name: Restart Keycloak container to force changes to take effect
   block:

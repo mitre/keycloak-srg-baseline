@@ -7,7 +7,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
     - name: Add RBAC roles
       ansible.builtin.shell: >
@@ -15,7 +15,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000053
   tags:
     - cat3

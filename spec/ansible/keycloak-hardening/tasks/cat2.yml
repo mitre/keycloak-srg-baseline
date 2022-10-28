@@ -1,27 +1,23 @@
 ---
-- name: Create a list variable for enabledEventTypes
-  # TODO: Do I need to fetch existing enabledEventTypes first?
-  ansible.builtin.set_fact:
-    enabled_event_types_list: []
-#- name: enabled_event_types list to string
-#  ansible.builtin.set_fact:
-#    enabledEventTypes: "{{ '[ ' + enabled_event_types_list | join(', ') + ' ]' }}"
-
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000005 | Keycloak must be configured to automatically audit account creation.
   block:
     - name: Configure to audit account creation
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
 
-    - name: Update enabled_event_types_list
+    - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
-  when: xccdf_hdf_group_KEYC_01_000005
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
@@ -30,30 +26,44 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000006 | Keycloak must be configured to automatically audit account modification.
   block:
     - name: Configure to audit account modification
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
 
-    - name: Update enabled_event_types_list
+    - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | unique }}"
-  when: xccdf_hdf_group_KEYC_01_000006
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000006
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000007 | Keycloak must be configured to automatically audit account disabling actions.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000007
+  block:
+    - name: Configure to audit account disabling
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
@@ -62,17 +72,22 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000008 | Keycloak must be configured to automatically audit account removal actions.
   block:
     - name: Configure to audit account removal
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
 
-    - name: Update enabled_event_types_list
+    - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | unique }}"
-  when: xccdf_hdf_group_KEYC_01_000008
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
@@ -87,65 +102,77 @@
   register: result
   check_mode: false
   changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000009
+#  ignore_errors: true
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000009
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000010 | Keycloak must be configured to audit each authentication and authorization transaction.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000010
+  block:
+    - name: Configure to audit authentication and authorization transaction
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update enabled_event_types_list and events_listeners_list
+      ansible.builtin.set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) | unique }}"
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000010
-    
 
-# TODO: need to determine appropriate event types
-#- name: xccdf_hdf_group_KEYC-01-000010 | Update enabled_event_types list
-#  ansible.builtin.set_fact:
-#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) |unique }}"
-#  when: xccdf_hdf_group_KEYC_01_000010
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000010
-#    
-
-# TODO: enabledEventTypes part probably isn't correct here
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000011 | Keycloak configuration audit records must identify what type of events occurred.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-    -s 'enabledEventTypes={{ enabled_event_types_string }}'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000011
+  block:
+    - name: Configure to audit authentication and authorization transaction
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000011
 
-# TODO: enabledEventTypes part probably isn't correct here
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000012 | Keycloak configuration audit records must identify when (date and time) the events occurred.
   block:
     - name: Configure to audit date and time of event occurrence
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-        -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set log console format in keycloak.conf
       lineinfile:
@@ -157,80 +184,118 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000012
+#      ignore_errors: true
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000012
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000013 | Keycloak configuration audit records must identify where the events occurred.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000013
+  block:
+    - name: Configure audit records to identify where the events occurred
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000013
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000014 | Keycloak configuration audit records must identify the source of the events.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
+  block:
+    - name: Configure audit records to identify the source of the events
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000014
 
-# TODO: enabledEventTypes part probably isn't correct here
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000015 | Keycloak configuration audit records must identify the outcome of the events.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-    -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-    -s 'enabledEventTypes={{ enabled_event_types_string }}'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000015
+  block:
+    - name: Configure audit records to identify the outcome of the events
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000015
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000016 | Keycloak configuration audit records must identify any individual user or process associated with the event.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000016
+  block:
+    - name: Configure audit records to identify any individual user or process associated with the event
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000016
 
-# TODO: enabledEventTypes part probably isn't correct here
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000017 | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs.
   block:
     - name: Configure alerts to SA and ISSO upon audit processing failure
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set spi events in keycloak.conf
       ansible.builtin.blockinfile:
@@ -244,25 +309,25 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
-    # - name: Set quarkus syslog in quarkus.properties
-    #   ansible.builtin.blockinfile:
-    #     path: "{{ keycloak_home }}/conf/quarkus.properties"
-    #     block: |
-    #       quarkus.log.syslog.enable=true
-    #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-    #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-    #     state: present
-    #     create: true
-    #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-    #   register: result
-    #   check_mode: false
-    #   changed_when: false
-    #   ignore_errors: true
+#    - name: Set quarkus syslog in quarkus.properties
+#      ansible.builtin.blockinfile:
+#        path: "{{ keycloak_home }}/conf/quarkus.properties"
+#        block: |
+#          quarkus.log.syslog.enable=true
+#          quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+#          quarkus.log.syslog.protocol={{ quarkus_protocol }}
+#        state: present
+#        create: true
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+#      register: result
+#      check_mode: false
+#      changed_when: false
+#      ignore_errors: true
 
     - name: Set action mail account in auditd.conf
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/audit/auditd.conf
         regexp: "^action_mail_acct = "
         line: action_mail_acct = {{ action_mail_account }}
@@ -271,25 +336,30 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000017
+#      ignore_errors: true
+
+# TODO: Restart the \"auditd\" service so the changes take effect
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000017
 
-# TODO: enabledEventTypes part probably isn't correct here
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000018 | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out
-    manner.
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000018 | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner.
   block:
-    - name: Configure audit record overwriting to FIFO
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+    - name: Configure audit records overwriting the oldest audit records in a first-in-first-out manner
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
+
+    - name: Update events_listeners_list
+      ansible.builtin.set_fact:
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set spi events in keycloak.conf
       ansible.builtin.blockinfile:
@@ -303,43 +373,49 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
-  # - name: Set quarkus syslog in quarkus.properties
-  #   ansible.builtin.blockinfile:
-  #     path: "{{ keycloak_home }}/conf/quarkus.properties"
-  #     block: |
-  #       quarkus.log.syslog.enable=true
-  #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-  #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-  #     state: present
-  #     create: true
-  #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  #   register: result
-  #   check_mode: false
-  #   changed_when: false
-  #   ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000018
+#    - name: Set quarkus syslog in quarkus.properties
+#      ansible.builtin.blockinfile:
+#        path: "{{ keycloak_home }}/conf/quarkus.properties"
+#        block: |
+#          quarkus.log.syslog.enable=true
+#          quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+#          quarkus.log.syslog.protocol={{ quarkus_protocol }}
+#        state: present
+#        create: true
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+#      register: result
+#      check_mode: false
+#      changed_when: false
+#      ignore_errors: true
+
+# TODO: Then install the log service (if the log service is not already installed) on system
+# TODO: Enable the log service
+# TODO: Work with the centralized server's administrators to configure audit records to overwrite oldest records in a first-in-first-out manner
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000018
-    
 
-# TODO: syslog is configured to alert the SA and ISSO when any audit processing failure occurs?
-
-# TODO: enabledEventTypes part probably isn't correct here
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000019 | Keycloak must be configured to queue audit records locally until communication is restored when any audit
     processing failure occurs.
   block:
     - name: Configure queuing of audit records locally
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
+
+    - name: Update enabled_event_types_list and events_listeners_list
+      ansible.builtin.set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) | unique }}"
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set spi events in keycloak.conf
       ansible.builtin.blockinfile:
@@ -353,30 +429,38 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
-  # - name: Set quarkus syslog in quarkus.properties
-  #   ansible.builtin.blockinfile:
-  #     path: "{{ keycloak_home }}/conf/keycloak.conf"
-  #     block: |
-  #       quarkus.log.syslog.enable=true
-  #       quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
-  #       quarkus.log.syslog.protocol={{ quarkus_protocol }}
-  #     state: present
-  #     create: true
-  #     marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
-  #   register: result
-  #   check_mode: false
-  #   changed_when: false
-  #   ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000019
+#    - name: Set quarkus syslog in quarkus.properties
+#      ansible.builtin.blockinfile:
+#        path: "{{ keycloak_home }}/conf/quarkus.properties"
+#        block: |
+#          quarkus.log.syslog.enable=true
+#          quarkus.log.syslog.endpoint={{ quarkus_endpoint }}
+#          quarkus.log.syslog.protocol={{ quarkus_protocol }}
+#        state: present
+#        create: true
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK - QUARKUS"
+#      register: result
+#      check_mode: false
+#      changed_when: false
+#      ignore_errors: true
+
+# TODO: Then install the log service (if the log service is not already installed) on system
+# TODO: Enable the log service
+# TODO: Then use the following configuration in /etc/rsyslog.conf or create a file with the following content in the /etc/rsyslog.d/ directory
+#
+#    $ActionQueueType LinkedList
+#
+#    $ActionQueueFileName example_fwd
+#
+#    $ActionResumeRetryCount -1
+#
+#    $ActionQueueSaveOnShutdown on
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000019
-    
-
-# TODO: log service is enabled on the system?
 
 # TODO: Where does profile.properties go?
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000021 | Keycloak must be configured to disable non-essential modules.
@@ -390,8 +474,7 @@
   register: result
   check_mode: false
   changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000021
+#  ignore_errors: true
   tags:
     - cat2
     - medium
@@ -437,8 +520,8 @@
           ansible.builtin.set_fact:
             initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
 
-        - debug:
-            msg: "{{ initial_ids }}"
+#        - debug:
+#            msg: "{{ initial_ids }}"
 
         - name: create a copy of browser authentication flow
           ansible.builtin.shell: |
@@ -505,7 +588,7 @@
   #      ansible.builtin.set_fact:
   #        auth_otp_level: "{{ json_executions | community.general.json_query('[?providerId==`auth-otp-form`].level') }}"
   #
-  #    - name: auth-otp-leve
+  #    - name: auth-otp-level
   #      debug: msg={{ auth_otp_level }}
   tags:
     - cat2
@@ -587,7 +670,6 @@
           register: custom_flow
           ignore_errors: false
       when: '"auth-x509-client-username-form" not in initial_authenticators'
-  when: xccdf_hdf_group_KEYC_01_000027
   tags:
     - cat2
     - medium
@@ -606,10 +688,6 @@
       when:
         - password_policy_string | length > 0
         - '"length(15)" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -628,10 +706,6 @@
       when:
         - password_policy_string | length > 0
         - '"passwordHistory(5)" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -650,10 +724,6 @@
       when:
         - password_policy_string | length > 0
         - '"upperCase" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -672,10 +742,6 @@
       when:
         - password_policy_string | length > 0
         - '"lowerCase" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -694,10 +760,6 @@
       when:
         - password_policy_string | length > 0
         - '"digits" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -716,10 +778,6 @@
       when:
         - password_policy_string | length > 0
         - '"specialChars" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -739,10 +797,6 @@
 #      when:
 #        - password_policy_string | length > 0
 #        - '"minimumPasswordLife(24)" not in password_policy_string'
-#
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
 #  tags:
 #    - cat2
 #    - medium
@@ -761,10 +815,6 @@
       when:
         - password_policy_string | length > 0
         - '"forceExpiredPasswordChange(60)" not in password_policy_string'
-
-#    - name: Show post-password policy string
-#      ansible.builtin.debug:
-#        var: password_policy_string
   tags:
     - cat2
     - medium
@@ -853,14 +903,19 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000047 | Keycloak must be configured to notify the system administrators and ISSO when accounts are created.
   block:
     - name: Configure notifications when accounts are created
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
 
-  when: xccdf_hdf_group_KEYC_01_000047
+#    - name: Update events_listeners_list
+#      ansible.builtin.set_fact:
+#        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
   tags:
     - cat2
     - medium
@@ -870,14 +925,19 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000048 | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified.
   block:
     - name: Configure notifications when accounts are modified
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
 
-  when: xccdf_hdf_group_KEYC_01_000048
+#    - name: Update events_listeners_list
+#      ansible.builtin.set_fact:
+#        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
   tags:
     - cat2
     - medium
@@ -886,14 +946,19 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000049 | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions.
   block:
     - name: Configure notifications when accounts are disabled
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
 
-  when: xccdf_hdf_group_KEYC_01_000049
+  #    - name: Update events_listeners_list
+  #      ansible.builtin.set_fact:
+  #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
   tags:
     - cat2
     - medium
@@ -902,28 +967,35 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000050 | Keycloak must be configured to notify the system administrators and ISSO for account removal actions.
   block:
     - name: Configure notifications when accounts are removed
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
 
-  when: xccdf_hdf_group_KEYC_01_000050
+  #    - name: Update events_listeners_list
+  #      ansible.builtin.set_fact:
+  #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000050
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000051 | Keycloak must be configured to automatically audit account enabling actions.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true
-    -s adminEventsDetailsEnabled=true
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000051
+  community.general.keycloak_realm:
+    auth_keycloak_url: "{{ keycloak_server_address }}"
+    auth_client_id: "{{ keycloak_client_id }}"
+    realm: "{{ keycloak_realm }}"
+    auth_realm: "{{ keycloak_realm }}"
+    auth_username: "{{ keycloak_admin_user }}"
+    auth_password: "{{ keycloak_admin_password }}"
+    state: present
+    admin_events_enabled: yes
+    admin_events_details_enabled: yes
   tags:
     - cat2
     - medium
@@ -932,14 +1004,19 @@
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000052 | Keycloak must be configured to notify system administrators and ISSO of account enabling actions.
   block:
     - name: Configure notifications when accounts are enabled
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners={{ events_listeners_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
 
-  when: xccdf_hdf_group_KEYC_01_000052
+#    - name: Update events_listeners_list
+#      ansible.builtin.set_fact:
+#        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
   tags:
     - cat2
     - medium
@@ -952,7 +1029,7 @@
   register: result
   check_mode: false
   changed_when: false
-  ignore_errors: true
+#  ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000054
   tags:
     - cat2
@@ -961,14 +1038,21 @@
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000055 | Keycloak must be configured to send audit records to a centralized audit server.
   block:
-    - name: Configure transport of audit records
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+    - name: Configure to send audit records to a centralized audit server
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        events_enabled: yes
+
+    - name: Update enabled_event_types_list and events_listeners_list
+      ansible.builtin.set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) | unique }}"
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set spi events in keycloak.conf
       ansible.builtin.blockinfile:
@@ -982,7 +1066,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
   # - name: Set quarkus syslog in quarkus.properties
   #   ansible.builtin.blockinfile:
@@ -998,23 +1082,33 @@
   #   check_mode: false
   #   changed_when: false
   #   ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000055
+
+# TODO: Then install the log service (if the log service is not already installed) on system
+# TODO: Enable the log service
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000055
 
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000056 | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for
-    audit records.
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000056 | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records.
   block:
-    - name: Configure to record time stamps in UTC
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+    - name: Configure to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update enabled_event_types_list and events_listeners_list
+      ansible.builtin.set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) | unique }}"
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set spi events in keycloak.conf
       ansible.builtin.blockinfile:
@@ -1028,7 +1122,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
   # - name: Set quarkus syslog in quarkus.properties
   #   ansible.builtin.blockinfile:
@@ -1045,7 +1139,7 @@
   #   check_mode: false
   #   changed_when: false
   #   ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000056
+# TODO: Enable the log service
   tags:
     - cat2
     - medium
@@ -1053,14 +1147,23 @@
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000057 | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records.
   block:
-    - name: Configure time stamp granularity
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update events/config -r {{ keycloak_realm }} -s adminEventsEnabled=true  -s adminEventsDetailsEnabled=true -s eventsEnabled=true -s 'eventsListeners=["jboss-logging"]'
-        -s 'enabledEventTypes={{ enabled_event_types_string }}'
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+    - name: Configure minimum granularity of one second to record time stamps for audit records
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        state: present
+        admin_events_enabled: yes
+        admin_events_details_enabled: yes
+        events_enabled: yes
+
+    - name: Update enabled_event_types_list and events_listeners_list
+      ansible.builtin.set_fact:
+#        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) | unique }}"
+        events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set spi events in keycloak.conf
       ansible.builtin.blockinfile:
@@ -1074,7 +1177,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
 
     - name: Set log console format in keycloak.conf
       lineinfile:
@@ -1086,7 +1189,7 @@
       register: result
       check_mode: false
       changed_when: false
-      ignore_errors: true
+#      ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000057
   tags:
     - cat2
