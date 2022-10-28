@@ -1,8 +1,9 @@
 # TODO: consider options for multiple realms
 keycloak_server_address: http://localhost:8080
+keycloak_client_id: admin-cli
 keycloak_realm: master
 keycloak_admin_user: admin
-keycloak_admin_password:
+keycloak_admin_password: admin
 is_container: true
 container_name: keycloak_test
 target_python_path: "{{ ansible_facts['discovered_interpreter_python'] }}"  #/usr/libexec/platform-python3.6
@@ -15,7 +16,6 @@ pip_dependencies:
 package_dependencies:
   - unzip
   - openssl
-keycloak_realm: master
 user_name: admin
 keycloak_home: /opt/keycloak
 role_policy_name: policy

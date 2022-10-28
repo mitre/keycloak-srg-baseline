@@ -592,104 +592,184 @@
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000027
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | Keycloak must be configured to enforce a minimum 15-character password length."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000029
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000029
-#
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000030
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000030
-#    
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000031
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000031
 
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000032
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000032
-#    
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000033
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000033
-#    
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000034
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000034
-#    
-#
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | Keycloak must be configured to enforce a minimum 15-character password length."
+  block:
+    - name: Set minimum character length as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "length(15)"
+      when: not password_policy_string | length > 0
+
+    - name: Append minimum character length to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and length(15)' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"length(15)" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000029
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
+  block:
+    - name: Set minimum password history reuse length as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "passwordHistory(5)"
+      when: not password_policy_string | length > 0
+
+    - name: Append minimum password history reuse to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and passwordHistory(5)' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"passwordHistory(5)" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000030
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
+  block:
+    - name: Set minimum of 1 upper-case character as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "upperCase"
+      when: not password_policy_string | length > 0
+
+    - name: Append minimum of 1 upper-case character to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and upperCase' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"upperCase" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000031
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
+  block:
+    - name: Set minimum of 1 lower-case character as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "lowerCase"
+      when: not password_policy_string | length > 0
+
+    - name: Append minimum of 1 lower-case character to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and lowerCase' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"lowerCase" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000032
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
+  block:
+    - name: Set minimum of 1 numeric character as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "digits"
+      when: not password_policy_string | length > 0
+
+    - name: Append minimum of 1 numeric character to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and digits' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"digits" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000033
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
+  block:
+    - name: Set minimum of 1 special character as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "specialChars"
+      when: not password_policy_string | length > 0
+
+    - name: Append minimum of 1 special character to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and specialChars' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"specialChars" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000034
+
+# TODO: This causes an error (not part of provided Keycloak functionality) needs to be implemented after custom policy upload
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000038
+#  block:
+#    - name: Set minimum password lifetime as initial policy in password_policy_string
+#      ansible.builtin.set_fact:
+#        password_policy_string: "minimumPasswordLife(24)"
+#      when: not password_policy_string | length > 0
+#
+#    - name: Append minimum password lifetime to password_policy_string
+#      ansible.builtin.set_fact:
+#        password_policy_string: "{{ password_policy_string + ' and minimumPasswordLife(24)' }}"
+#      when:
+#        - password_policy_string | length > 0
+#        - '"minimumPasswordLife(24)" not in password_policy_string'
+#
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
 #  tags:
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000038
-#    
-#- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
-#  ansible.builtin.shell: 
-#  register: result
-#  check_mode: false
-#  changed_when: false
-#  ignore_errors: true
-#  when: xccdf_hdf_group_KEYC_01_000039
-#  tags:
-#    - cat2
-#    - medium
-#    - xccdf_hdf_group_KEYC-01-000039
-#    
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
+  block:
+    - name: Set maximum password lifetime as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "forceExpiredPasswordChange(60)"
+      when: not password_policy_string | length > 0
+
+    - name: Append maximum password lifetime to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and forceExpiredPasswordChange(60)' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"forceExpiredPasswordChange(60)" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000039
+
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000043 | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication.
   block:
     - name: get current flows
@@ -1013,9 +1093,9 @@
     - medium
     - xccdf_hdf_group_KEYC-01-000057
     
-#
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
-#  ansible.builtin.shell: 
+#  ansible.builtin.shell:
 #  register: result
 #  check_mode: false
 #  changed_when: false
@@ -1025,8 +1105,7 @@
 #    - cat2
 #    - medium
 #    - xccdf_hdf_group_KEYC-01-000059
-#    
-#
+
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000064 | AAA Services must not be configured with shared accounts."
 #  ansible.builtin.shell:
 #  register: result

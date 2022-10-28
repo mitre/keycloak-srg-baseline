@@ -38,13 +38,21 @@
 - name: HIGH | xccdf_hdf_group_KEYC-01-000023 | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined
     in the PPSM CAL and vulnerability assessments.
   block:
-    - name: Set password hash algorithm
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
-      register: result
-      check_mode: false
-      changed_when: false
-      ignore_errors: true
+    - name: Set hashAlgorithm as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "hashAlgorithm(pbkdf2-sha256)"
+      when: not password_policy_string | length > 0
+
+    - name: Append hashAlgorithm to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and hashAlgorithm(pbkdf2-sha256)' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"hashAlgorithm(pbkdf2-sha256)" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
 
     - name: Set cache in keycloak.conf
       ansible.builtin.blockinfile:
@@ -67,6 +75,7 @@
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000025 | Keycloak must be configured to uniquely identify and authenticate organizational users.
   block:
+#    - name: Create realm role
     - name: Create realm role
       ansible.builtin.shell: >
         {{ path }}kcadm.sh create roles -r {{ keycloak_realm }} -s name={{ role_policy_name }} -s 'description={{ role_policy_description }}'
@@ -87,20 +96,25 @@
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000025
-    
+
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000036 | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module.
-  ansible.builtin.shell: >
-    {{ path }}kcadm.sh update realms/{{ keycloak_realm }} -s "passwordPolicy='hashAlgorithm(pbkdf2-sha256)'"
-  register: result
-  check_mode: false
-  changed_when: false
-  ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000036
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000036
+  block:
+    - name: Set hashAlgorithm as initial policy in password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "hashAlgorithm(pbkdf2-sha256)"
+      when: not password_policy_string | length > 0
+
+    - name: Append hashAlgorithm to password_policy_string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ password_policy_string + ' and hashAlgorithm(pbkdf2-sha256)' }}"
+      when:
+        - password_policy_string | length > 0
+        - '"hashAlgorithm(pbkdf2-sha256)" not in password_policy_string'
+
+#    - name: Show post-password policy string
+#      ansible.builtin.debug:
+#        var: password_policy_string
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000040 | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for
     PKI-based authentication.

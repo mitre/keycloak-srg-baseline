@@ -97,7 +97,7 @@
       ansible.builtin.shell: >
         openssl pkcs7 -in {{ keycloak_home }}/Certificates_PKCS7_*/*.pem.p7b -print_certs -out {{ keycloak_home }}/DoD_CAs.pem
 
-    - name: Obtain Certificate
+    - name: Configure spi Certificate
       java_cert:
         cert_path: "{{ keycloak_home }}/DoD_CAs.pem"
         keystore_path: "{{ spi_trust_store_file_path }}"
@@ -118,3 +118,37 @@
     dest: /tmp/password-min-time-policy-0.0.1.jar
   tags:
     - test
+
+- name: Display current realm information or failure message
+  block:
+    - name: Display current realm information
+      community.general.keycloak_realm:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_client_id: "{{ keycloak_client_id }}"
+        realm: "{{ keycloak_realm }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+      register: realm_config
+      ignore_errors: true
+
+    - name: Display failure message
+      fail:
+        msg: "ERROR: Realm information not found. Check your connection variables."
+      when: realm_config.failed
+
+    - name: realm info
+      debug:
+        msg: "{{ realm_config }}"
+  tags:
+    - fail
+
+- name: Create a string variable for passwordPolicy
+  # TODO: Do I need to fetch existing password policy first?
+  ansible.builtin.set_fact:
+    password_policy_string: ""
+
+- name: Create a list variable for enabledEventTypes
+  # TODO: Do I need to fetch existing enabledEventTypes first?
+  ansible.builtin.set_fact:
+    enabled_event_types_list: []
