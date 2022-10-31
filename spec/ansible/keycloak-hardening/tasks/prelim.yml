@@ -142,11 +142,19 @@
   tags:
     - fail
 
-- name: Create empty password policy, enabled events types, and events listeners
-  # TODO: fetch existing password policy first?
-  # TODO: fetch existing enabledEventTypes first?
-  # TODO: fetch existing eventListeners first?
-  ansible.builtin.set_fact:
-    password_policy_string: ""
-    enabled_event_types_list: []
-    events_listeners_list: []
+- name: Set enabled_event_types_list, events_listeners_list, and password_policy_string variables
+  block:
+    - name: Collect enabled events types and events listeners lists
+      ansible.builtin.set_fact:
+        enabled_event_types_list: "{{ realm_config.existing.enabledEventTypes }}"
+        events_listeners_list: "{{ realm_config.existing.eventsListeners }}"
+
+    - name: Collect password policy string
+      ansible.builtin.set_fact:
+        password_policy_string: "{{ realm_config.existing.passwordPolicy }}"
+      when: realm_config.existing.passwordPolicy is defined
+
+    - name: Create password policy string
+      ansible.builtin.set_fact:
+        password_policy_string: ""
+      when: realm_config.existing.passwordPolicy is not defined
