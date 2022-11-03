@@ -145,102 +145,22 @@
     - xccdf_hdf_group_KEYC-01-000040
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000041 | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication.
-#  community.general.keycloak_authentication:
-#    auth_keycloak_url: http://localhost:8080
-#    auth_realm: master
-#    auth_username: admin
-#    auth_password: admin
-#    realm: master
-#    alias: "Copy of browser"
-#    copyFrom: "browser"
-#    authenticationExecutions:
-#      - providerId: "auth-x509-client-username-form"
-#        requirement: "REQUIRED"
-#        authenticationConfig:
-#          alias: "test.execution1.property"
-#          config:
-#            test1.property: "value"
-#      - providerId: "test-execution2"
-#        requirement: "REQUIRED"
-#        authenticationConfig:
-#          alias: "test.execution2.property"
-#          config:
-#            test2.property: "value"
-#    state: present
-
-  block:
-    - name: Get current flows
-      ansible.builtin.shell: >
-        {{ path }}kcadm.sh get authentication/flows
-      register: initial_flows
-      ignore_errors: false
-
-    - name: Set initial flows' authenticators in json
-      ansible.builtin.set_fact:
-        initial_json_authenticators: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].authenticationExecutions[*].authenticator') | list }}"
-
-    - name: Set initial flows' authenticator to array
-      ansible.builtin.set_fact:
-        initial_authenticators: "{{ query('community.general.flattened', initial_json_authenticators) }}"
-
-    # The following is executed on the condition that auth-509-client-username-form was not found
-    - block:
-        - name: Set initial flows' ids in json
-          ansible.builtin.set_fact:
-            initial_json_ids: "{{ initial_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
-
-        - name: Set initial flows' ids to array
-          ansible.builtin.set_fact:
-            initial_ids: "{{ query('community.general.flattened', initial_json_ids) }}"
-
-        - name: Create a copy of browser authentication flow
-          ansible.builtin.shell: |
-            {{ path }}kcadm.sh create authentication/flows/browser/copy -s \"providerId\"=\"basic_flow\"
-            {{ path }}kcadm.sh get authentication/flows
-          register: new_flows
-          check_mode: false
-          changed_when: false
-          ignore_errors: false
-
-        - name: Set new flows in json
-          ansible.builtin.set_fact:
-            new_ids: "{{ new_flows.stdout | from_json | community.general.json_query('[*].id') | list }}"
-
-        - name: Set variable for new flow id
-          ansible.builtin.set_fact:
-            new_id: "{{ new_ids | difference(initial_ids) | list }}"
-
-        - name: Update new flow's alias
-          ansible.builtin.shell: |
-            {{ path }}kcadm.sh update authentication/flows/{{ new_id.0 }} -s \"alias\"=\"x509_alias\"
-          ignore_errors: false
-
-        - name: Update new flow's execution
-          ansible.builtin.shell: |
-            {{ path }}kcadm.sh create authentication/flows/x509_alias/executions/execution -s \"provider\"=\"auth-x509-client-username-form\"
-          register: success
-          ignore_errors: false
-
-        - name: Get new flows execution
-          ansible.builtin.shell: |
-            {{ path }}kcadm.sh get authentication/flows/x509_alias/executions
-          register: custom_flow
-          ignore_errors: false
-
-        - name: Set new flow in json
-          ansible.builtin.set_fact:
-            custom_json_flow: "{{ custom_flow.stdout | from_json | community.general.json_query('[*]') }}"
-
-        - name: Get x509 execution id
-          ansible.builtin.set_fact:
-            x509_id: "{{ custom_json_flow | community.general.json_query('[?providerId==`auth-x509-client-username-form`].id') }}"
-
-        - name: Create config
-          ansible.builtin.shell: |
-            {{ path }}kcadm.sh create "authentication/executions/{{ x509_id.0 }}/config" -r master -b '{"config":{"x509-cert-auth.timestamp-validation-enabled":"true"},"alias":"x509_timestamp"}'
-          register: x509_timestamp
-          ignore_errors: false
-      when: '"auth-x509-client-username-form" not in initial_authenticators'
+  community.general.keycloak_authentication:
+    auth_keycloak_url: "{{ keycloak_server_address }}"
+    auth_realm: "{{ keycloak_realm }}"
+    auth_username: "{{ keycloak_admin_user }}"
+    auth_password: "{{ keycloak_admin_password }}"
+    realm: "{{ keycloak_realm }}"
+    alias: "x509"
+    copyFrom: "browser"
+    authenticationExecutions:
+      - providerId: "auth-x509-client-username-form"
+        requirement: "REQUIRED"
+        authenticationConfig:
+          alias: "x509.execution.forms"
+          config:
+            x509-cert-auth.timestamp-validation-enabled: true
+    state: present
   tags:
     - cat1
     - high
