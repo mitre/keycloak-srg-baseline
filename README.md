@@ -18,12 +18,12 @@ git clone https://github.com/mitre/keycloak-srg-baseline.git
 cd keycloak-srg-baseline/spec/ansible
 ```
 
-Edit the `vars/main.yml` file with values specific to the Keycloak deployment under test.
+Edit the `spec/ansible/keycloak-hardening/vars/main.yml` file with values specific to the Keycloak deployment under test.
 
 Execute the playbook.
 
 ``` bash
-ansible-playbook playbook.yml --extra-vars keycloak_admin_password=<your admin password>
+ansible-playbook spec/ansible/playbook.yml --extra-vars keycloak_admin_password=<your admin password>
 ```
 
 ## Launching and working with the Keycloak image
