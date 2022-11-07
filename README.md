@@ -1,24 +1,34 @@
-# Work in Progress
+# keycloak-srg-baseline (Work In Progress)
 
-# keycloak-srg-baseline
+This Ansible role hardens RedHat's [Keycloak](https://www.keycloak.org/) SSO application in line with DISA's Authentication, Authorization and Accounting Server Security Requirements Guide (AAA SRG).
 
+This role is intended to work on Keycloak versions based off of Quarkus (tested with version 19), both the container and bare-metal installation versions.
+
+## Requirements
+
+- Ansible v2.11+
+- Python v3.X
 
 ## Getting Started
 
+Copy this repository locally.
 
-# Running This Baseline Directly from Github
-
+``` bash
+git clone https://github.com/mitre/keycloak-srg-baseline.git
+cd keycloak-srg-baseline/spec/ansible
 ```
-# How to run
+
+Edit the `vars/main.yml` file with values specific to the Keycloak deployment under test.
+
+Execute the playbook.
+
+``` bash
+ansible-playbook playbook.yml --extra-vars keycloak_admin_password=<your admin password>
 ```
 
-### Different Run Options
+## Launching and working with the Keycloak image
 
-
-
-## Running This Baseline from a local Archive copy
-
-Obtain docker Keycloak image and set ADMIN username/password
+Obtain the official Keycloak container image and set the admin username/password:
 ```
 docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:18.0.2 start-dev
 ```
@@ -42,41 +52,11 @@ cd spec/ansible
 ansible-playbook playbook.yml
 ```
 
-## Viewing the JSON Results
-
-The JSON results output file can be loaded into __[heimdall-lite](https://heimdall-lite.mitre.org/)__ for a user-interactive, graphical view of the InSpec results.
-
-The JSON InSpec results file may also be loaded into a __[full heimdall server](https://github.com/mitre/heimdall)__, allowing for additional functionality such as to store and compare multiple profile runs.
-
 ## Testing with Kitchen
 
-
-### Setup Environment
-
-
-### Execute Tests
-
+TODO: describe pipeline
 
 ## Authors
-
-
-## Special Thanks
-
-
-## Contributing and Getting Help
-
-
-### NOTICE
-
-
-
-### NOTICE
-
-
-
-### NOTICE
-
-
-
-### NOTICE
-
+- [Brett Warren](https://github.com/brett-w)
+- [Henry Xiao](https://github.com/HenryXiaoHX)
+- [Will Dower](https://github.com/wdower)
