@@ -161,6 +161,7 @@
           config:
             x509-cert-auth.timestamp-validation-enabled: true
     state: present
+  when: xccdf_hdf_group_KEYC_01_000041
   tags:
     - cat1
     - high
