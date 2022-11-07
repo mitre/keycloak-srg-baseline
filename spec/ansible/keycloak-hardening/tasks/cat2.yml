@@ -33,10 +33,11 @@
         auth_realm: "{{ keycloak_realm }}"
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
-        state: present
         admin_events_enabled: yes
         admin_events_details_enabled: yes
-        events_enabled: yes
+        events_enabled: true
+        state: present
+        
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
@@ -669,6 +670,7 @@
           config:
             x509-cert-auth.mapper-selection: true
     state: present
+  when: xccdf_hdf_group_KEYC_01_000043
   tags:
     - cat2
     - medium
