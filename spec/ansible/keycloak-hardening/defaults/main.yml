@@ -19,8 +19,8 @@ xccdf_hdf_group_KEYC_01_000022: true
 xccdf_hdf_group_KEYC_01_000023: true
 xccdf_hdf_group_KEYC_01_000024: true
 xccdf_hdf_group_KEYC_01_000025: true
-xccdf_hdf_group_KEYC_01_000026: true
-xccdf_hdf_group_KEYC_01_000027: true
+xccdf_hdf_group_KEYC_01_000026: false
+xccdf_hdf_group_KEYC_01_000027: false
 xccdf_hdf_group_KEYC_01_000029: true
 xccdf_hdf_group_KEYC_01_000030: true
 xccdf_hdf_group_KEYC_01_000031: true
