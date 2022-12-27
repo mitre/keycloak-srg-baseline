@@ -19,8 +19,8 @@ xccdf_hdf_group_KEYC_01_000022: true
 xccdf_hdf_group_KEYC_01_000023: true
 xccdf_hdf_group_KEYC_01_000024: true
 xccdf_hdf_group_KEYC_01_000025: true
-xccdf_hdf_group_KEYC_01_000026: false
-xccdf_hdf_group_KEYC_01_000027: false
+xccdf_hdf_group_KEYC_01_000026: true
+xccdf_hdf_group_KEYC_01_000027: true
 xccdf_hdf_group_KEYC_01_000029: true
 xccdf_hdf_group_KEYC_01_000030: true
 xccdf_hdf_group_KEYC_01_000031: true
@@ -31,8 +31,8 @@ xccdf_hdf_group_KEYC_01_000036: true
 xccdf_hdf_group_KEYC_01_000038: true
 xccdf_hdf_group_KEYC_01_000039: true
 xccdf_hdf_group_KEYC_01_000040: true
-xccdf_hdf_group_KEYC_01_000041: false
-xccdf_hdf_group_KEYC_01_000043: false
+xccdf_hdf_group_KEYC_01_000041: true
+xccdf_hdf_group_KEYC_01_000043: true
 xccdf_hdf_group_KEYC_01_000047: true
 xccdf_hdf_group_KEYC_01_000048: true
 xccdf_hdf_group_KEYC_01_000049: true

@@ -675,6 +675,7 @@
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000043
+    - cert_config
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000047 | Keycloak must be configured to notify the system administrators and ISSO when accounts are created.
   block:

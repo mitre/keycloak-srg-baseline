@@ -4,9 +4,13 @@
     - name: Sign in as admin
       ansible.builtin.shell: "{{ keycloak_home }}/bin/kcadm.sh config credentials --server {{ keycloak_server_address }} --realm {{ keycloak_realm }} --user {{ keycloak_admin_user }} --password {{ keycloak_admin_password }}"
       register: signin
+  tags:
+    - cert_config
 
 - name: Upgrade pip
-  command: "{{ target_python_path }} -m pip install --upgrade pip"
+  ansible.builtin.command: "{{ target_python_path }} -m pip install --upgrade pip"
+  tags:
+    - cert_config
 # - name: Upgrade pip
 #   package:
 #     use: pip
@@ -18,7 +22,8 @@
   ansible.builtin.pip:
     name: "{{ pip_dependencies }}"
     state: present
-  tags: test
+  tags:
+    - cert_config
 
 - name: Install package dependencies
   ansible.builtin.package:
@@ -29,25 +34,27 @@
 
 # the packages module does not work with microdnf, so use command
 - name: Install package dependencies (microdnf)
-  command: microdnf install {{ package_dependencies | join(" ") }}
-
+  ansible.builtin.command: microdnf install {{ package_dependencies | join(" ") }}
+  tags:
+    - cert_config
 - name: Copy Over HTTPS Certificate
   block:
     - name: Copy SSL Certificate
-      copy:
+      ansible.builtin.copy:
         src: "{{ https_certificate_files }}"
         dest: "{{ https_certificate_files_path }}"
 
     - name: Copy SSL Key Certificate
-      copy:
+      ansible.builtin.copy:
         src: "{{ https_certificate_key_files }}"
         dest: "{{ https_certificate_key_files_path }}"
   when: not generate_certificates
-  tags: test
+  tags:
+    - cert_config
 
 - name: Generate a Self Signed OpenSSL certificate
   block:
-    - debug: msg="WARNING! Ansible is creating a self-signed certificate for Keycloak. This should not be done in production."
+    - ansible.builtin.debug: msg="WARNING! Ansible is creating a self-signed certificate for Keycloak. This should not be done in production."
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
         path: "{{ https_certificate_key_files_path }}"
@@ -68,10 +75,11 @@
         privatekey_path: "{{ https_certificate_key_files_path }}"
         provider: selfsigned
   when: generate_certificates
-  tags: test
+  tags:
+    - cert_config
 
 - name: Set perms on cert files
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     owner: root
     group: root
@@ -79,6 +87,8 @@
   loop:
     - "{{ https_certificate_files_path }}"
     - "{{ https_certificate_key_files_path }}"
+  tags:
+    - cert_config
 
 - name: Set up TrustStore
   block:
@@ -92,22 +102,46 @@
         src: "{{ keycloak_home }}/cert.zip"
         dest: "{{ keycloak_home }}"
         remote_src: true
+    
+    # Hedging against the filename of the zip download changing
+    - name: Register DoD certificates working directory path
+      ansible.builtin.shell: |
+        cd {{ keycloak_home }}/Certificates_PKCS7_*
+        pwd
+      register: keycloak_dod_cert_directory_path
 
-    - name: Prepare Certificate
-      ansible.builtin.shell: >
-        openssl pkcs7 -in {{ keycloak_home }}/Certificates_PKCS7_*/*.pem.p7b -print_certs -out {{ keycloak_home }}/DoD_CAs.pem
+    - name: Convert DoD p7b archive to a PEM archive
+      ansible.builtin.shell: |
+        cd {{ keycloak_dod_cert_directory_path.stdout }}
+        openssl pkcs7 -in *.pem.p7b -print_certs -out DoD_CA_Chain.pem
+    
+    - name: Split the PEM archive into individual keyfiles
+      ansible.builtin.shell: |
+        cd {{ keycloak_dod_cert_directory_path.stdout }}
+        csplit DoD_CA_Chain.pem /"-----END CERTIFICATE-----"/+1 "{100}" -k -s -f "DoD_CA_File"
+        chmod 400 
+      ignore_errors: true
+    
+    - name: Generate list of keyfiles
+      ansible.builtin.find:
+        paths: "{{ keycloak_dod_cert_directory_path.stdout }}"
+        patterns: "DoD_CA_File*"
+      register: dod_ca_files
 
     - name: Configure spi Certificate
-      java_cert:
-        cert_path: "{{ keycloak_home }}/DoD_CAs.pem"
+      community.general.java_cert:
+        cert_path: "{{ item.path }}"
         keystore_path: "{{ spi_trust_store_file_path }}"
         keystore_pass: "{{ spi_trust_store_password }}"
         keystore_create: true
         state: present
-        cert_alias: DoD_CAs
+        cert_alias: "{{ item.path }}"
         trust_cacert: true
+      with_items: "{{ dod_ca_files.files }}"
+      ignore_errors: true
   tags:
-    - testTrustStore
+    - cert_config
+    - dod_cert
 
 - name: Pull custom-event-listener
   community.general.maven_artifact:

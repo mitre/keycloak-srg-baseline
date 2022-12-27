@@ -33,6 +33,7 @@
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000022
+    - cert_config
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000023 | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined
     in the PPSM CAL and vulnerability assessments.
@@ -143,6 +144,7 @@
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000040
+    - cert_config
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000041 | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication.
   community.general.keycloak_authentication:
@@ -166,3 +168,4 @@
     - cat1
     - high
     - xccdf_hdf_group_KEYC-01-000041
+    - cert_config
