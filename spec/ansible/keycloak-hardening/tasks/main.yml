@@ -1,15 +1,15 @@
 ---
 - name: Set Up
-  import_tasks: prelim.yml
+  ansible.builtin.import_tasks: prelim.yml
 
 - name: CAT I
-  import_tasks: cat1.yml
+  ansible.builtin.import_tasks: cat1.yml
 
 - name: CAT II
-  import_tasks: cat2.yml
+  ansible.builtin.import_tasks: cat2.yml
 
 - name: CAT III
-  import_tasks: cat3.yml
+  ansible.builtin.import_tasks: cat3.yml
 
-- name: Egress
-  import_tasks: apply_changes.yml
+- name: Apply changes
+  ansible.builtin.import_tasks: apply_changes.yml

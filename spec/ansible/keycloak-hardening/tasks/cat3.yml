@@ -1,5 +1,9 @@
 ---
 - name: LOW | xccdf_hdf_group_KEYC-01-000053 | Keycloak must be configured to use Role-Based Access Control (RBAC) policy for levels of access authorization.
+  tags:
+    - cat3
+    - low
+    - xccdf_hdf_group_KEYC-01-000053
   block:
     - name: Create RBAC roles
       ansible.builtin.shell: >
@@ -17,7 +21,3 @@
       changed_when: false
       ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000053
-  tags:
-    - cat3
-    - low
-    - xccdf_hdf_group_KEYC-01-000053

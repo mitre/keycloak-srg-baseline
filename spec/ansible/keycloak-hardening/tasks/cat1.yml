@@ -1,5 +1,10 @@
 ---
 - name: HIGH | xccdf_hdf_group_KEYC-01-000022 | Keycloak must be configured to use secure protocols when connecting to directory services.
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000022
+    - skip_ansible_lint
   block:
     - name: Set protocols in keycloak.conf
       ansible.builtin.blockinfile:
@@ -13,7 +18,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
     - name: Set HTTPS TrustStore in keycloak.conf
       ansible.builtin.blockinfile:
@@ -28,15 +34,15 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000022
-    - cert_config
+      tags:
+        - skip_ansible_lint
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000023 | Keycloak must be configured to use protocols that encrypt credentials when authenticating clients, as defined
     in the PPSM CAL and vulnerability assessments.
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000023
   block:
     - name: Set hashAlgorithm as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -62,15 +68,15 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
+
+- name: HIGH | xccdf_hdf_group_KEYC-01-000025 | Keycloak must be configured to uniquely identify and authenticate organizational users.
   tags:
     - cat1
     - high
-    - xccdf_hdf_group_KEYC-01-000023
-
-- name: HIGH | xccdf_hdf_group_KEYC-01-000025 | Keycloak must be configured to uniquely identify and authenticate organizational users.
+    - xccdf_hdf_group_KEYC-01-000025
   block:
-#    - name: Create realm role
     - name: Create realm role
       ansible.builtin.shell: >
         {{ path }}kcadm.sh create roles -r {{ keycloak_realm }} -s name={{ role_policy_name }} -s 'description={{ role_policy_description }}'
@@ -87,11 +93,6 @@
       changed_when: false
       ignore_errors: true
   when: xccdf_hdf_group_KEYC_01_000025
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000025
-
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000036 | Keycloak must be configured to encrypt locally stored credentials using a FIPS-validated cryptographic module.
   block:
@@ -109,6 +110,11 @@
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000040 | Keycloak must be configured to only accept certificates issued by a DoD-approved Certificate Authority for
     PKI-based authentication.
+  tags:
+    - cat1
+    - high
+    - xccdf_hdf_group_KEYC-01-000040
+    - cert_config
   block:
     - name: Set protocols in keycloak.conf
       ansible.builtin.blockinfile:
@@ -122,7 +128,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
     - name: Set spi trust store in keycloak.conf
       ansible.builtin.blockinfile:
@@ -137,14 +144,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
-
-# TODO: Then inspect the certificates used in truststore
-  tags:
-    - cat1
-    - high
-    - xccdf_hdf_group_KEYC-01-000040
-    - cert_config
+      tags:
+        - skip_ansible_lint
 
 - name: HIGH | xccdf_hdf_group_KEYC-01-000041 | Keycloak must be configured to not accept certificates that have been revoked for PKI-based authentication.
   community.general.keycloak_authentication:

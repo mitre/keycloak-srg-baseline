@@ -1,5 +1,9 @@
 ---
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000005 | Keycloak must be configured to automatically audit account creation.
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000005
   block:
     - name: Configure to audit account creation
       community.general.keycloak_realm:
@@ -10,20 +14,20 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['REGISTER']) | unique }}"
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000006 | Keycloak must be configured to automatically audit account modification.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000005
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000006 | Keycloak must be configured to automatically audit account modification.
+    - xccdf_hdf_group_KEYC-01-000006
   block:
     - name: Configure to audit account modification
       community.general.keycloak_realm:
@@ -33,22 +37,21 @@
         auth_realm: "{{ keycloak_realm }}"
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
         events_enabled: true
         state: present
-        
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['UPDATE_PROFILE', 'UPDATE_EMAIL', 'UPDATE_PASSWORD']) | unique }}"
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000007 | Keycloak must be configured to automatically audit account disabling actions.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000006
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000007 | Keycloak must be configured to automatically audit account disabling actions.
+    - xccdf_hdf_group_KEYC-01-000007
   block:
     - name: Configure to audit account disabling
       community.general.keycloak_realm:
@@ -59,18 +62,18 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000008 | Keycloak must be configured to automatically audit account removal actions.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000007
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000008 | Keycloak must be configured to automatically audit account removal actions.
+    - xccdf_hdf_group_KEYC-01-000008
   block:
     - name: Configure to audit account removal
       community.general.keycloak_realm:
@@ -81,18 +84,14 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
         enabled_event_types_list: "{{ enabled_event_types_list | union(['DELETE_ACCOUNT']) | unique }}"
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000008
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000009 | Keycloak must be configured to automatically lock user accounts after three consecutive invalid logon attempts
     within a 15-minute time period.
@@ -110,6 +109,10 @@
     - xccdf_hdf_group_KEYC-01-000009
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000010 | Keycloak must be configured to audit each authentication and authorization transaction.
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000010
   block:
     - name: Configure to audit authentication and authorization transaction
       community.general.keycloak_realm:
@@ -120,20 +123,20 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
 #        enabled_event_types_list: "{{ enabled_event_types_list | union(['']) | unique }}"
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000011 | Keycloak configuration audit records must identify what type of events occurred.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000010
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000011 | Keycloak configuration audit records must identify what type of events occurred.
+    - xccdf_hdf_group_KEYC-01-000011
   block:
     - name: Configure to audit authentication and authorization transaction
       community.general.keycloak_realm:
@@ -144,19 +147,19 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000012 | Keycloak configuration audit records must identify when (date and time) the events occurred.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000011
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000012 | Keycloak configuration audit records must identify when (date and time) the events occurred.
+    - xccdf_hdf_group_KEYC-01-000012
   block:
     - name: Configure to audit date and time of event occurrence
       community.general.keycloak_realm:
@@ -167,16 +170,16 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
 
     - name: Set log console format in keycloak.conf
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "{{ keycloak_home }}/conf/keycloak.conf"
         regexp: ^log-console-format
         line: log-console-format={{ log_console_format }}
@@ -185,13 +188,14 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000013 | Keycloak configuration audit records must identify where the events occurred.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000012
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000013 | Keycloak configuration audit records must identify where the events occurred.
+    - xccdf_hdf_group_KEYC-01-000013
   block:
     - name: Configure audit records to identify where the events occurred
       community.general.keycloak_realm:
@@ -202,19 +206,19 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000014 | Keycloak configuration audit records must identify the source of the events.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000013
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000014 | Keycloak configuration audit records must identify the source of the events.
+    - xccdf_hdf_group_KEYC-01-000014
   block:
     - name: Configure audit records to identify the source of the events
       community.general.keycloak_realm:
@@ -225,19 +229,19 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000015 | Keycloak configuration audit records must identify the outcome of the events.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000014
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000015 | Keycloak configuration audit records must identify the outcome of the events.
+    - xccdf_hdf_group_KEYC-01-000015
   block:
     - name: Configure audit records to identify the outcome of the events
       community.general.keycloak_realm:
@@ -248,19 +252,19 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000016 | Keycloak configuration audit records must identify any individual user or process associated with the event.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000015
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000016 | Keycloak configuration audit records must identify any individual user or process associated with the event.
+    - xccdf_hdf_group_KEYC-01-000016
   block:
     - name: Configure audit records to identify any individual user or process associated with the event
       community.general.keycloak_realm:
@@ -271,17 +275,17 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
         events_listeners_list: "{{ events_listeners_list | union(['jboss-logging']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000017 | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000016
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000017 | Keycloak must be configured to alert the SA and ISSO when any audit processing failure occurs.
+    - xccdf_hdf_group_KEYC-01-000017
   block:
     - name: Configure alerts to SA and ISSO upon audit processing failure
       community.general.keycloak_realm:
@@ -292,7 +296,7 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
@@ -310,7 +314,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
 #    - name: Set quarkus syslog in quarkus.properties
 #      ansible.builtin.blockinfile:
@@ -337,15 +342,16 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
 # TODO: Restart the \"auditd\" service so the changes take effect
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000018 | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000017
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000018 | Keycloak must be configured to generate audit records overwriting the oldest audit records in a first-in-first-out manner.
+    - xccdf_hdf_group_KEYC-01-000018
   block:
     - name: Configure audit records overwriting the oldest audit records in a first-in-first-out manner
       community.general.keycloak_realm:
@@ -356,7 +362,7 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
     - name: Update events_listeners_list
       ansible.builtin.set_fact:
@@ -374,7 +380,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
 #    - name: Set quarkus syslog in quarkus.properties
 #      ansible.builtin.blockinfile:
@@ -394,13 +401,13 @@
 # TODO: Then install the log service (if the log service is not already installed) on system
 # TODO: Enable the log service
 # TODO: Work with the centralized server's administrators to configure audit records to overwrite oldest records in a first-in-first-out manner
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000018
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000019 | Keycloak must be configured to queue audit records locally until communication is restored when any audit
     processing failure occurs.
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000019
   block:
     - name: Configure queuing of audit records locally
       community.general.keycloak_realm:
@@ -411,7 +418,7 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
@@ -430,7 +437,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
 #    - name: Set quarkus syslog in quarkus.properties
 #      ansible.builtin.blockinfile:
@@ -458,10 +466,6 @@
 #    $ActionResumeRetryCount -1
 #
 #    $ActionQueueSaveOnShutdown on
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000019
 
 # TODO: Where does profile.properties go?
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000021 | Keycloak must be configured to disable non-essential modules.
@@ -480,6 +484,7 @@
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000021
+    - skip_ansible_lint
 
 # TODO: applicable in a container?
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000024 | Keycloak must be configured to prohibit or restrict the use of organization-defined functions, ports, protocols, and/or services, as defined in the PPSM CAL and vulnerability assessments."
@@ -509,6 +514,10 @@
 #    - xccdf_hdf_group_KEYC-01-000027
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000029 | Keycloak must be configured to enforce a minimum 15-character password length."
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000029
   block:
     - name: Set minimum character length as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -521,12 +530,12 @@
       when:
         - password_policy_string | length > 0
         - '"length(15)" not in password_policy_string'
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000029
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000030 | Keycloak must be configured to prohibit password reuse for a minimum of five generations."
+    - xccdf_hdf_group_KEYC-01-000030
   block:
     - name: Set minimum password history reuse length as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -539,12 +548,12 @@
       when:
         - password_policy_string | length > 0
         - '"passwordHistory(5)" not in password_policy_string'
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000030
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000031 | Keycloak must be configured to enforce password complexity by requiring that at least one upper-case character be used."
+    - xccdf_hdf_group_KEYC-01-000031
   block:
     - name: Set minimum of 1 upper-case character as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -557,12 +566,12 @@
       when:
         - password_policy_string | length > 0
         - '"upperCase" not in password_policy_string'
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000031
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000032 | Keycloak must be configured to enforce password complexity by requiring that at least one lower-case character be used."
+    - xccdf_hdf_group_KEYC-01-000032
   block:
     - name: Set minimum of 1 lower-case character as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -575,12 +584,12 @@
       when:
         - password_policy_string | length > 0
         - '"lowerCase" not in password_policy_string'
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000032
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000033 | Keycloak must be configured to enforce password complexity by requiring that at least one numeric character be used."
+    - xccdf_hdf_group_KEYC-01-000033
   block:
     - name: Set minimum of 1 numeric character as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -593,12 +602,12 @@
       when:
         - password_policy_string | length > 0
         - '"digits" not in password_policy_string'
+
+- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000033
-
-- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000034 | Keycloak must be configured to enforce password complexity by requiring that at least one special character be used."
+    - xccdf_hdf_group_KEYC-01-000034
   block:
     - name: Set minimum of 1 special character as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -611,10 +620,6 @@
       when:
         - password_policy_string | length > 0
         - '"specialChars" not in password_policy_string'
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000034
 
 # TODO: This causes an error (not part of provided Keycloak functionality) needs to be implemented after custom policy upload
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000038 | Keycloak must be configured to enforce 24 hours as the minimum password lifetime."
@@ -636,6 +641,10 @@
 #    - xccdf_hdf_group_KEYC-01-000038
 
 - name: "MEDIUM | xccdf_hdf_group_KEYC-01-000039 | Keycloak must be configured to enforce a 60-day maximum password lifetime restriction."
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000039
   block:
     - name: Set maximum password lifetime as initial policy in password_policy_string
       ansible.builtin.set_fact:
@@ -648,10 +657,6 @@
       when:
         - password_policy_string | length > 0
         - '"forceExpiredPasswordChange(60)" not in password_policy_string'
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000039
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000043 | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication.
   community.general.keycloak_authentication:
@@ -678,6 +683,10 @@
     - cert_config
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000047 | Keycloak must be configured to notify the system administrators and ISSO when accounts are created.
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000047
   block:
     - name: Configure notifications when accounts are created
       community.general.keycloak_realm:
@@ -688,18 +697,17 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
 #    - name: Update events_listeners_list
 #      ansible.builtin.set_fact:
 #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000048 | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000047
-    
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000048 | Keycloak must be configured to notify the system administrators and ISSO when accounts are modified.
+    - xccdf_hdf_group_KEYC-01-000048
   block:
     - name: Configure notifications when accounts are modified
       community.general.keycloak_realm:
@@ -710,17 +718,17 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
 #    - name: Update events_listeners_list
 #      ansible.builtin.set_fact:
 #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000049 | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000048
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000049 | Keycloak must be configured to notify the system administrators and ISSO for account disabling actions.
+    - xccdf_hdf_group_KEYC-01-000049
   block:
     - name: Configure notifications when accounts are disabled
       community.general.keycloak_realm:
@@ -731,17 +739,17 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
   #    - name: Update events_listeners_list
   #      ansible.builtin.set_fact:
   #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000050 | Keycloak must be configured to notify the system administrators and ISSO for account removal actions.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000049
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000050 | Keycloak must be configured to notify the system administrators and ISSO for account removal actions.
+    - xccdf_hdf_group_KEYC-01-000050
   block:
     - name: Configure notifications when accounts are removed
       community.general.keycloak_realm:
@@ -752,15 +760,11 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
   #    - name: Update events_listeners_list
   #      ansible.builtin.set_fact:
   #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000050
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000051 | Keycloak must be configured to automatically audit account enabling actions.
   community.general.keycloak_realm:
@@ -771,14 +775,18 @@
     auth_username: "{{ keycloak_admin_user }}"
     auth_password: "{{ keycloak_admin_password }}"
     state: present
-    admin_events_enabled: yes
-    admin_events_details_enabled: yes
+    admin_events_enabled: true
+    admin_events_details_enabled: true
   tags:
     - cat2
     - medium
     - xccdf_hdf_group_KEYC-01-000051
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000052 | Keycloak must be configured to notify system administrators and ISSO of account enabling actions.
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000052
   block:
     - name: Configure notifications when accounts are enabled
       community.general.keycloak_realm:
@@ -789,15 +797,11 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
 #    - name: Update events_listeners_list
 #      ansible.builtin.set_fact:
 #        events_listeners_list: "{{ events_listeners_list | union(['']) | unique }}"
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000052
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000054 | Keycloak must be configured to maintain locks on user accounts until released by an administrator.
   ansible.builtin.shell: |
@@ -814,6 +818,10 @@
     - xccdf_hdf_group_KEYC-01-000054
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000055 | Keycloak must be configured to send audit records to a centralized audit server.
+  tags:
+    - cat2
+    - medium
+    - xccdf_hdf_group_KEYC-01-000055
   block:
     - name: Configure to send audit records to a centralized audit server
       community.general.keycloak_realm:
@@ -824,7 +832,7 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        events_enabled: yes
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
@@ -843,7 +851,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
   # - name: Set quarkus syslog in quarkus.properties
   #   ansible.builtin.blockinfile:
@@ -862,12 +871,12 @@
 
 # TODO: Then install the log service (if the log service is not already installed) on system
 # TODO: Enable the log service
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000056 | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000055
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000056 | Keycloak must be configured to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records.
+    - xccdf_hdf_group_KEYC-01-000056
   block:
     - name: Configure to use or map to Coordinated Universal Time (UTC) to record time stamps for audit records
       community.general.keycloak_realm:
@@ -878,9 +887,9 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
@@ -899,7 +908,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
   # - name: Set quarkus syslog in quarkus.properties
   #   ansible.builtin.blockinfile:
@@ -917,12 +927,12 @@
   #   changed_when: false
   #   ignore_errors: true
 # TODO: Enable the log service
+
+- name: MEDIUM | xccdf_hdf_group_KEYC-01-000057 | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records.
   tags:
     - cat2
     - medium
-    - xccdf_hdf_group_KEYC-01-000056
-
-- name: MEDIUM | xccdf_hdf_group_KEYC-01-000057 | Keycloak must be configured with a minimum granularity of one second to record time stamps for audit records.
+    - xccdf_hdf_group_KEYC-01-000057
   block:
     - name: Configure minimum granularity of one second to record time stamps for audit records
       community.general.keycloak_realm:
@@ -933,9 +943,9 @@
         auth_username: "{{ keycloak_admin_user }}"
         auth_password: "{{ keycloak_admin_password }}"
         state: present
-        admin_events_enabled: yes
-        admin_events_details_enabled: yes
-        events_enabled: yes
+        admin_events_enabled: true
+        admin_events_details_enabled: true
+        events_enabled: true
 
     - name: Update enabled_event_types_list and events_listeners_list
       ansible.builtin.set_fact:
@@ -954,7 +964,8 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
+      tags:
+        - skip_ansible_lint
 
     - name: Set log console format in keycloak.conf
       lineinfile:
@@ -966,14 +977,11 @@
       register: result
       check_mode: false
       changed_when: false
-#      ignore_errors: true
-  when: xccdf_hdf_group_KEYC_01_000057
-  tags:
-    - cat2
-    - medium
-    - xccdf_hdf_group_KEYC-01-000057
-    
+      tags:
+        - skip_ansible_lint
 
+  when: xccdf_hdf_group_KEYC_01_000057
+    
 #- name: "MEDIUM | xccdf_hdf_group_KEYC-01-000059 | Keycloak must be configured to allow the use of a temporary password at initial logon with an immediate change to a permanent password."
 #  ansible.builtin.shell:
 #  register: result

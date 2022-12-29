@@ -1,63 +1,79 @@
 ---
-- name: Set Up
-  block:
-    - name: Sign in as admin
-      ansible.builtin.shell: "{{ keycloak_home }}/bin/kcadm.sh config credentials --server {{ keycloak_server_address }} --realm {{ keycloak_realm }} --user {{ keycloak_admin_user }} --password {{ keycloak_admin_password }}"
-      register: signin
+- name: Sign in as admin
+  ansible.builtin.shell: |
+    "{{ keycloak_home }}/bin/kcadm.sh config credentials \
+    --server {{ keycloak_server_address }} \
+    --realm {{ keycloak_realm }} \
+    --user {{ keycloak_admin_user }} \
+    --password {{ keycloak_admin_password }}"
+  register: signin
   tags:
-    - cert_config
+    - skip_ansible_lint
 
 - name: Upgrade pip
-  ansible.builtin.command: "{{ target_python_path }} -m pip install --upgrade pip"
+  ansible.builtin.command: |
+    "{{ target_python_path }} -m pip install --upgrade pip"
   tags:
-    - cert_config
-# - name: Upgrade pip
-#   package:
-#     use: pip
-#     name: pip
-#     state: latest
-#   tags: test
+    - dependencies
+    - skip_ansible_lint
+  register: pip_status
 
-- name: Install pip dependencies
+- name: Install dependencies via pip
   ansible.builtin.pip:
     name: "{{ pip_dependencies }}"
     state: present
   tags:
-    - cert_config
+    - dependencies
 
 - name: Install package dependencies
   ansible.builtin.package:
     name: "{{ package_dependencies }}"
     state: present
-  tags: test
+  tags: 
+    - dependencies
   when: not is_container
 
-# the packages module does not work with microdnf, so use command
+# the packages module does not support microdnf, so use command
 - name: Install package dependencies (microdnf)
-  ansible.builtin.command: microdnf install {{ package_dependencies | join(" ") }}
+  ansible.builtin.command: |
+    microdnf install {{ package_dependencies | join(" ") }}
   tags:
-    - cert_config
+    - dependencies
+    - skip_ansible_lint
+  when: is_container
+  
 - name: Copy Over HTTPS Certificate
+  when: not generate_certificates
+  tags:
+    - certificates
   block:
     - name: Copy SSL Certificate
       ansible.builtin.copy:
         src: "{{ https_certificate_files }}"
         dest: "{{ https_certificate_files_path }}"
+        owner: root
+        mode: '0640'
 
     - name: Copy SSL Key Certificate
       ansible.builtin.copy:
         src: "{{ https_certificate_key_files }}"
         dest: "{{ https_certificate_key_files_path }}"
-  when: not generate_certificates
-  tags:
-    - cert_config
+        owner: root
+        mode: '0640'
 
-- name: Generate a Self Signed OpenSSL certificate
+- name: Generate a self-signed OpenSSL certificate
+  when: generate_certificates
+  tags:
+    - certificates
   block:
-    - ansible.builtin.debug: msg="WARNING! Ansible is creating a self-signed certificate for Keycloak. This should not be done in production."
+    - name: "Self-signed cert warning"
+      ansible.builtin.debug: 
+        msg: "WARNING! Ansible is creating a self-signed certificate for Keycloak. This should not be done in production."
+    
     - name: Create private key (RSA, 4096 bits)
       community.crypto.openssl_privatekey:
         path: "{{ https_certificate_key_files_path }}"
+    
     - name: Create certificate signing request (CSR) for self-signed certificate
       community.crypto.openssl_csr_pipe:
         privatekey_path: "{{ https_certificate_key_files_path }}"
@@ -74,9 +90,6 @@
         csr_content: "{{ csr.csr }}"
         privatekey_path: "{{ https_certificate_key_files_path }}"
         provider: selfsigned
-  when: generate_certificates
-  tags:
-    - cert_config
 
 - name: Set perms on cert files
   ansible.builtin.file:
@@ -88,14 +101,19 @@
     - "{{ https_certificate_files_path }}"
     - "{{ https_certificate_key_files_path }}"
   tags:
-    - cert_config
+    - certificates
 
 - name: Set up TrustStore
+  tags:
+    - truststore
   block:
     - name: Obtain Certificate
       ansible.builtin.get_url:
         url: "{{ dod_certificate_url }}"
         dest: "{{ keycloak_home }}/cert.zip"
+        owner: root
+        group: root
+        mode: "0640"
 
     - name: Un-compress Certificate Archive
       ansible.builtin.unarchive:
@@ -109,18 +127,23 @@
         cd {{ keycloak_home }}/Certificates_PKCS7_*
         pwd
       register: keycloak_dod_cert_directory_path
+      tags:
+        - skip_ansible_lint
 
     - name: Convert DoD p7b archive to a PEM archive
       ansible.builtin.shell: |
         cd {{ keycloak_dod_cert_directory_path.stdout }}
         openssl pkcs7 -in *.pem.p7b -print_certs -out DoD_CA_Chain.pem
+      tags:
+        - skip_ansible_lint
     
     - name: Split the PEM archive into individual keyfiles
       ansible.builtin.shell: |
         cd {{ keycloak_dod_cert_directory_path.stdout }}
         csplit DoD_CA_Chain.pem /"-----END CERTIFICATE-----"/+1 "{100}" -k -s -f "DoD_CA_File"
-        chmod 400 
       ignore_errors: true
+      tags:
+        - skip_ansible_lint
     
     - name: Generate list of keyfiles
       ansible.builtin.find:
@@ -128,7 +151,7 @@
         patterns: "DoD_CA_File*"
       register: dod_ca_files
 
-    - name: Configure spi Certificate
+    - name: Configure spi certificate
       community.general.java_cert:
         cert_path: "{{ item.path }}"
         keystore_path: "{{ spi_trust_store_file_path }}"
@@ -139,9 +162,9 @@
         trust_cacert: true
       with_items: "{{ dod_ca_files.files }}"
       ignore_errors: true
-  tags:
-    - cert_config
-    - dod_cert
+      tags:
+        - skip_ansible_lint
+
 
 - name: Pull custom-event-listener
   community.general.maven_artifact:
@@ -150,9 +173,11 @@
     version: 0.0.1
     dest: /tmp/password-min-time-policy-0.0.1.jar
   tags:
-    - test
+    - maven
 
 - name: Display current realm information or failure message
+  tags:
+    - realm_info
   block:
     - name: Collect current realm information
       community.general.keycloak_realm:
@@ -166,15 +191,13 @@
 #      ignore_errors: true
 
     - name: Display failure message
-      fail:
+      ansible.builtin.fail:
         msg: "ERROR: Realm information not found. Check your connection variables."
       when: realm_config.failed
 
     - name: Display current realm information
-      debug:
+      ansible.builtin.debug:
         msg: "{{ realm_config }}"
-  tags:
-    - fail
 
 - name: Set enabled_event_types_list, events_listeners_list, and password_policy_string variables
   block:
