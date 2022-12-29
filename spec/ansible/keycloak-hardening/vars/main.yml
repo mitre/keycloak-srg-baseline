@@ -3,9 +3,9 @@ keycloak_server_address: http://localhost:8080
 keycloak_client_id: admin-cli
 keycloak_realm: master
 keycloak_admin_user: admin
-keycloak_admin_password: admin
+keycloak_admin_password: foobar
 is_container: true
-container_name: keycloak_ca_test
+container_name: keycloak_test
 target_python_path: "{{ ansible_facts['discovered_interpreter_python'] }}"  #/usr/libexec/platform-python3.6
 pip_dependencies:
   - setuptools

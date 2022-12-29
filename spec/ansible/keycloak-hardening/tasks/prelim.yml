@@ -1,18 +1,18 @@
 ---
 - name: Sign in as admin
   ansible.builtin.shell: |
-    "{{ keycloak_home }}/bin/kcadm.sh config credentials \
+    {{ keycloak_home }}/bin/kcadm.sh config credentials \
     --server {{ keycloak_server_address }} \
     --realm {{ keycloak_realm }} \
     --user {{ keycloak_admin_user }} \
-    --password {{ keycloak_admin_password }}"
+    --password {{ keycloak_admin_password }}
   register: signin
   tags:
     - skip_ansible_lint
 
 - name: Upgrade pip
   ansible.builtin.command: |
-    "{{ target_python_path }} -m pip install --upgrade pip"
+    {{ target_python_path }} -m pip install --upgrade pip
   tags:
     - dependencies
     - skip_ansible_lint
