@@ -144,6 +144,14 @@
       ignore_errors: true
       tags:
         - skip_ansible_lint
+
+    # FOR LOCAL DEVELOPER NON-CAC PURPOSES
+    - name: Import Custom CA
+      ansible.builtin.copy:
+        src: "/Users/dmarkowski/certs/myCA.pem"
+        dest: "{{ keycloak_dod_cert_directory_path.stdout }}/DoD_CA_File-Custom_CA"
+        owner: root
+        mode: '0640'
     
     - name: Generate list of keyfiles
       ansible.builtin.find:

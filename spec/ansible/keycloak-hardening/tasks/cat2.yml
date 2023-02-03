@@ -659,22 +659,36 @@
         - '"forceExpiredPasswordChange(60)" not in password_policy_string'
 
 - name: MEDIUM | xccdf_hdf_group_KEYC-01-000043 | Keycloak must be configured to map the authenticated identity to the user account for PKI-based authentication.
-  community.general.keycloak_authentication:
-    auth_keycloak_url: "{{ keycloak_server_address }}"
-    auth_realm: "{{ keycloak_realm }}"
-    auth_username: "{{ keycloak_admin_user }}"
-    auth_password: "{{ keycloak_admin_password }}"
-    realm: "{{ keycloak_realm }}"
-    alias: "x509"
-    copyFrom: "browser"
-    authenticationExecutions:
-      - providerId: "auth-x509-client-username-form"
-        requirement: "REQUIRED"
-        authenticationConfig:
-          alias: "x509.execution.forms"
-          config:
-            x509-cert-auth.mapper-selection: true
-    state: present
+  block:
+    - name: Set up x509 Authentication
+      community.general.keycloak_authentication:
+        auth_keycloak_url: "{{ keycloak_server_address }}"
+        auth_realm: "{{ keycloak_realm }}"
+        auth_username: "{{ keycloak_admin_user }}"
+        auth_password: "{{ keycloak_admin_password }}"
+        realm: "{{ keycloak_realm }}"
+        alias: "x509"
+        copyFrom: "browser"
+        authenticationExecutions:
+          - providerId: "auth-x509-client-username-form"
+            requirement: "REQUIRED"
+            authenticationConfig:
+              alias: "x509.execution.forms"
+              config:
+                x509-cert-auth.mapper-selection: "Username or Email"
+                x509-cert-auth.regular-expression: '(.*?)(?:$)'
+                x509-cert-auth.mapping-source-selection: "Subject's e-mail"
+          - providerId: "auth-cookie"
+            requirement: "ALTERNATIVE"
+        state: present
+    # - name: Set x509 as default flow
+    #   community.general.keycloak_realm:
+    #     auth_keycloak_url: "{{ keycloak_server_address }}"
+    #     auth_realm: "{{ keycloak_realm }}"
+    #     auth_username: "{{ keycloak_admin_user }}"
+    #     auth_password: "{{ keycloak_admin_password }}"
+    #     realm: "{{ keycloak_realm }}"
+    #     browser_flow: "x509"
   when: xccdf_hdf_group_KEYC_01_000043
   tags:
     - cat2
